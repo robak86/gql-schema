@@ -1,0 +1,26 @@
+{
+  "name": "graphql-decorators",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require dist/spec/SpecHelper.js dist/spec/**/*.spec.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.0.0",
+    "@types/graphql": "^0.9.1",
+    "@types/lodash": "^4.14.65",
+    "@types/mocha": "^2.2.41",
+    "chai": "^4.0.2",
+    "mocha": "^3.4.2",
+    "reflect-metadata": "^0.1.10",
+    "source-map-support": "^0.4.15",
+    "typescript": "^2.3.4"
+  },
+  "dependencies": {
+    "graphql": "^0.10.1",
+    "lodash": "^4.17.4"
+  }
+}
