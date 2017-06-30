@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import * as _ from 'lodash';
 import {
     GraphQLField, GraphQLFieldConfigArgumentMap, GraphQLFieldResolver, GraphQLList, GraphQLNonNull, GraphQLObjectType,
     GraphQLOutputType
@@ -9,7 +8,8 @@ import {inferGraphQLType, TypeWrapperParams} from "../utils";
 import {ArgumentMapMetadata} from "./ArgumentMapMetadata";
 import {invariant, isPresent} from "../utils/core";
 import {Type} from "../utils/types";
-
+import {metadataGet, metadataGetOrSet} from "./metadataFactories";
+import * as _  from 'lodash';
 
 export type ObjectFieldType = GraphQLOutputType | Type<any>;
 
@@ -23,24 +23,17 @@ export type ObjectFieldConfig = {
 
 
 export class ObjectTypeMetadata implements IGraphQLMetadata {
+    static getForClass = metadataGet(GRAPHQL_METADATA_KEY);
+    static getOrCreateForClass = metadataGetOrSet(GRAPHQL_METADATA_KEY, ObjectTypeMetadata);
+
     private fields:{ [fieldName:string]:GraphQLField<any, any> & { type:any } } = {};
-    private _memoizedGraphQLType;
 
-    private constructor(private className) {}
-
-    static getForClass(klass:Type<any>):ObjectTypeMetadata | void {
-        return Reflect.getMetadata(GRAPHQL_METADATA_KEY, klass);
+    constructor(private klass:Function) {
+        this.toGraphQLType = _.memoize(this.toGraphQLType);
     }
 
-    static getOrCreateForClass(klass):ObjectTypeMetadata {
-        let nodeMetadata = Reflect.getOwnMetadata(GRAPHQL_METADATA_KEY, klass);
-
-        if (!nodeMetadata) {
-            nodeMetadata = new ObjectTypeMetadata(klass.name);
-            Reflect.defineMetadata(GRAPHQL_METADATA_KEY, nodeMetadata, klass);
-        }
-
-        return nodeMetadata;
+    get className():string {
+        return this.klass.name
     }
 
     getField(fieldName:string):GraphQLField<any, any> {
@@ -48,7 +41,6 @@ export class ObjectTypeMetadata implements IGraphQLMetadata {
     }
 
     addField(fieldName:string, config:ObjectFieldConfig) {
-        invariant(!isPresent(this._memoizedGraphQLType), 'Cannot add new fields after toGraphQLType call');
         let type = inferGraphQLType(config.type);
         let args = isPresent(config.args) ? inferGraphQLType(config.args as any, [ArgumentMapMetadata]) : null;
 
@@ -70,9 +62,15 @@ export class ObjectTypeMetadata implements IGraphQLMetadata {
     }
 
     toGraphQLType():GraphQLObjectType {
-        return this._memoizedGraphQLType || (this._memoizedGraphQLType = new GraphQLObjectType({
-                name: this.className,
-                fields: this.fields
-            } as any))
+        invariant(() => Object.keys(this.fields).length  > 0, `type ${this.className} doesn't contain any fields definition`);
+
+        this.addField = () => {
+            throw new Error('Cannot add new fields after toGraphQLType call')
+        };
+
+        return new GraphQLObjectType({
+            name: this.className,
+            fields: this.fields
+        })
     }
 }

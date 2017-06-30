@@ -8,7 +8,7 @@ import {
 import {GRAPHQL_METADATA_KEY, IGraphQLMetadata} from "../abstract/IGraphQLMetadata";
 import {inferGraphQLType} from "../utils";
 import {Type} from "../utils/types";
-import {invariant, isPresent} from "../utils/core";
+import {metadataGet, metadataGetOrSet} from "./metadataFactories";
 
 
 export type InputObjectFieldConfig = {
@@ -22,24 +22,17 @@ export type InputObjectFieldConfig = {
 
 
 export class InputObjectTypeMetadata implements IGraphQLMetadata {
+    static getForClass = metadataGet(GRAPHQL_METADATA_KEY);
+    static getOrCreateForClass = metadataGetOrSet(GRAPHQL_METADATA_KEY, InputObjectTypeMetadata);
+
     private fields:{ [fieldName:string]:GraphQLInputFieldConfig } = {};
-    private _memoizedGraphQLType;
 
-    private constructor(private className) {}
-
-    static getForClass(klass:Type<any>):InputObjectTypeMetadata | void {
-        return Reflect.getMetadata(GRAPHQL_METADATA_KEY, klass);
+    constructor(private klass) {
+        this.toGraphQLType = _.memoize(this.toGraphQLType);
     }
 
-    static getOrCreateForClass(klass):InputObjectTypeMetadata {
-        let nodeMetadata = Reflect.getOwnMetadata(GRAPHQL_METADATA_KEY, klass);
-
-        if (!nodeMetadata) {
-            nodeMetadata = new InputObjectTypeMetadata(klass.name);
-            Reflect.defineMetadata(GRAPHQL_METADATA_KEY, nodeMetadata, klass);
-        }
-
-        return nodeMetadata;
+    get className():string {
+        return this.klass.name;
     }
 
     getField(fieldName:string):GraphQLInputFieldConfig {
@@ -47,7 +40,6 @@ export class InputObjectTypeMetadata implements IGraphQLMetadata {
     }
 
     addField(fieldName:string, config:InputObjectFieldConfig) {
-        invariant(!isPresent(this._memoizedGraphQLType), 'Cannot add new fields after toGraphQLType call');
         let type = inferGraphQLType(config.type);
 
         if (config.nonNullItems && config.array) {
@@ -67,9 +59,13 @@ export class InputObjectTypeMetadata implements IGraphQLMetadata {
     }
 
     toGraphQLType():GraphQLInputObjectType {
-        return this._memoizedGraphQLType || (this._memoizedGraphQLType = new GraphQLInputObjectType({
-                name: this.className,
-                fields: this.fields
-            } as any))
+        this.addField = () => {
+            throw new Error('Cannot add new fields after toGraphQLType call');
+        };
+
+        return new GraphQLInputObjectType({
+            name: this.className,
+            fields: this.fields
+        })
     }
 }

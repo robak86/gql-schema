@@ -14,7 +14,7 @@ export type ArgumentConfig = {
 export class ArgumentMapMetadata implements IGraphQLMetadata {
     private arguments:GraphQLFieldConfigArgumentMap = {};
 
-    static getForClass(klass:Type<any>):ArgumentMapMetadata | void {
+    static getForClass(klass):ArgumentMapMetadata | void {
         return Reflect.getMetadata(GRAPHQL_METADATA_KEY, klass);
     }
 

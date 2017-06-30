@@ -1,15 +1,17 @@
-
 import {GraphQLString} from "graphql";
 import {expect} from 'chai';
-import {argumentField} from "../lib/decorators/argumentField";
-import {ArgumentMapMetadata} from "../lib/metadata/ArgumentMapMetadata";
+import {ArgumentMapMetadata} from "../../lib/metadata/ArgumentMapMetadata";
+import {args} from "../../lib/decorators/args";
 
 
-describe("ArgumentMapMetadata", () => {
+
+
+describe("@args", () => {
     describe("@argumentField", () => {
         it("creates registers configuration for annotated property", () => {
+
             class SomeClass {
-                @argumentField({type: GraphQLString})
+                @args.field({type: GraphQLString})
                 arg1:string
             }
 
