@@ -2,11 +2,13 @@ import {input} from "../../lib/decorators/input";
 import {InputObjectTypeMetadata} from "../../lib/metadata/InputObjectTypeMetadata";
 import {expect} from 'chai';
 import {GraphQLInputField, GraphQLObjectType, GraphQLString} from "graphql";
+import {field} from "../../lib/decorators/fields";
 
 describe("@input", () => {
-    describe("@input.define()", () => {
-        @input.define()
+    describe("@input()", () => {
+        @input()
         class SomeInputParams {
+            @field(GraphQLString) someDummyField:string;
         }
 
         it("attaches metadata object", () => {
@@ -18,11 +20,11 @@ describe("@input", () => {
         });
     });
 
-    describe("@input.field()", () => {
+    describe("@field()", () => {
         describe("native types", () => {
-            @input.define()
+            @input()
             class SomeInputParams {
-                @input.field({type: GraphQLString})
+                @field(GraphQLString)
                 someField:string;
             }
 
@@ -38,15 +40,15 @@ describe("@input", () => {
         });
 
         describe("decorated class type", () => {
-            @input.define()
+            @input()
             class NewUserAddressParams {
-                @input.field({type: GraphQLString})
+                @field(GraphQLString)
                 street:string;
             }
 
-            @input.define()
+            @input()
             class NewUserParams {
-                @input.field({type: NewUserAddressParams})
+                @field(NewUserAddressParams)
                 address:NewUserAddressParams;
             }
 

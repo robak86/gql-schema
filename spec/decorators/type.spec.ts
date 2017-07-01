@@ -7,12 +7,15 @@ import {createUnion} from "../../lib/factories/createUnion";
 import * as _ from 'lodash';
 import {createEnum} from "../../lib/factories/createEnum";
 import {type} from "../../lib/decorators/type";
-import {args} from "../../lib/decorators/args";
+import {args, field, resolve} from "../../lib/decorators/fields";
+import {argumentsObject} from "../../lib/index";
 
 describe("@type", () => {
-    describe("@type.define()", () => {
-        @type.define()
+    describe("@type()", () => {
+        @type()
         class SomeType {
+            @field(GraphQLString)
+            someField:string;
         }
 
         it("attaches metadata object", () => {
@@ -24,13 +27,14 @@ describe("@type", () => {
         });
     });
 
-    describe("@type.field()", () => {
+    describe("@field()", () => {
         describe("native types", () => {
             const resolveFunction = () => null;
 
-            @type.define()
+            @type()
             class SomeType {
-                @type.field({type: GraphQLString, resolve: resolveFunction})
+                @resolve(resolveFunction)
+                @field(GraphQLString)
                 someField:string;
             }
 
@@ -54,15 +58,15 @@ describe("@type", () => {
         });
 
         describe("annotated type", () => {
-            @type.define()
+            @type()
             class SomeOtherType {
-                @type.field({type: GraphQLString})
+                @field(GraphQLString)
                 some:string;
             }
 
-            @type.define()
+            @type()
             class SomeType {
-                @type.field({type: SomeOtherType})
+                @field(SomeOtherType)
                 someField:SomeOtherType;
             }
 
@@ -76,24 +80,24 @@ describe("@type", () => {
         });
 
         describe("union type created with createUnion", () => {
-            @type.define()
+            @type()
             class UnionType1 {
-                @type.field({type: GraphQLString})
+                @field(GraphQLString)
                 someField:SomeOtherType;
             }
 
-            @type.define()
+            @type()
             class UnionType2 {
-                @type.field({type: GraphQLString})
+                @field(GraphQLString)
                 someField:SomeOtherType;
             }
 
             type SomeUnion = UnionType1 | UnionType2;
             const SomeUnionType = createUnion('SomeUnionType', [UnionType1, UnionType2], _.noop);
 
-            @type.define()
+            @type()
             class SomeOtherType {
-                @type.field({type: SomeUnionType})
+                @field(SomeUnionType)
                 someField:SomeUnion;
             }
 
@@ -108,9 +112,9 @@ describe("@type", () => {
             type Status = 'started' | 'stopped';
             const StatusType = createEnum('Status', ['started', 'stopped']);
 
-            @type.define()
+            @type()
             class SomeOtherType {
-                @type.field({type: StatusType})
+                @field(StatusType)
                 status:Status;
             }
 
@@ -122,13 +126,17 @@ describe("@type", () => {
         });
 
         describe("arguments", () => {
+
+            @argumentsObject()
             class SomeFieldArguments {
-                @args.field({type: GraphQLString}) someArgument:string;
+                @field(GraphQLString)
+                someArgument:string;
             }
 
-            @type.define()
+            @type()
             class SomeType {
-                @type.field({type: GraphQLString, args: SomeFieldArguments, nonNull: true})
+                @field(GraphQLString)
+                @args(SomeFieldArguments)
                 someField:string;
             }
 

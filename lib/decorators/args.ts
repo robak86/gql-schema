@@ -1,11 +1,9 @@
-import {ArgumentConfig, ArgumentMapMetadata} from "../metadata/ArgumentMapMetadata";
+import {ArgumentMapMetadata} from "../metadata/ArgumentMapMetadata";
+import {Type as Klass} from "../utils/types";
 
-
-export const args = {
-    field: (fieldConfig:ArgumentConfig):PropertyDecorator => {
-        return (target:Object, propertyKey:string) => {
-            let objectTypeMetadata:ArgumentMapMetadata = ArgumentMapMetadata.getOrCreateForClass(target.constructor);
-            objectTypeMetadata.addArgumentField(propertyKey, fieldConfig);
-        }
+export const argumentsObject = () => {
+    return <T_FUNCTION extends Klass<any>>(klass:T_FUNCTION):T_FUNCTION => {
+        ArgumentMapMetadata.getOrCreateForClass(klass);
+        return klass;
     }
 };

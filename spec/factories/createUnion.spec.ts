@@ -3,16 +3,22 @@ import {createUnion} from "../../lib/factories/createUnion";
 import * as _ from 'lodash';
 import {ObjectTypeMetadata} from "../../lib/metadata/ObjectTypeMetadata";
 import {expect} from 'chai';
+import {GraphQLString} from "graphql";
+import {field} from "../../lib/decorators/fields";
 
 describe(".createUnion", () => {
     let SomeUnionTypeDefinition;
 
-    @type.define()
+    @type()
     class SomeType {
+        @field(GraphQLString)
+        someField:string;
     }
 
-    @type.define()
+    @type()
     class SomeOtherType {
+        @field(GraphQLString)
+        someField:string;
     }
 
 

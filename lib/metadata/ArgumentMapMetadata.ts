@@ -1,8 +1,10 @@
 import {GRAPHQL_METADATA_KEY, IGraphQLMetadata} from "../abstract/IGraphQLMetadata";
 import {GraphQLFieldConfigArgumentMap, GraphQLInputType} from "graphql";
-import {inferGraphQLType, TypeWrapperParams} from "../utils";
-import * as _ from 'lodash';
+import {TypeWrapperParams} from "../utils";
 import {Type} from "../utils/types";
+import {FieldsMetadata} from "./FieldsMetadata";
+import {metadataGet, metadataGetOrSet} from "./metadataFactories";
+import {someOrThrow} from "../utils/core";
 
 export type ArgumentConfig = {
     type:GraphQLInputType | Type<any>;
@@ -12,31 +14,13 @@ export type ArgumentConfig = {
 
 
 export class ArgumentMapMetadata implements IGraphQLMetadata {
-    private arguments:GraphQLFieldConfigArgumentMap = {};
+    static getForClass = metadataGet<ArgumentMapMetadata>(GRAPHQL_METADATA_KEY);
+    static getOrCreateForClass = metadataGetOrSet(GRAPHQL_METADATA_KEY, ArgumentMapMetadata);
 
-    static getForClass(klass):ArgumentMapMetadata | void {
-        return Reflect.getMetadata(GRAPHQL_METADATA_KEY, klass);
-    }
-
-    static getOrCreateForClass(klass):ArgumentMapMetadata {
-        let nodeMetadata = Reflect.getOwnMetadata(GRAPHQL_METADATA_KEY, klass);
-
-        if (!nodeMetadata) {
-            nodeMetadata = new ArgumentMapMetadata();
-            Reflect.defineMetadata(GRAPHQL_METADATA_KEY, nodeMetadata, klass);
-        }
-
-        return nodeMetadata;
-    }
-
-    addArgumentField(propertyName:string, config:ArgumentConfig) {
-        this.arguments[propertyName] = {
-            ..._.cloneDeep(config),
-            type: inferGraphQLType(config.type) as any
-        };
-    }
+    constructor(private klass) {}
 
     toGraphQLType():GraphQLFieldConfigArgumentMap {
-        return this.arguments;
+        let fieldsMetadata = someOrThrow(FieldsMetadata.getForClass(this.klass), `Missing fields definition for ${this.klass.name}`);
+        return fieldsMetadata.getFields() as GraphQLFieldConfigArgumentMap;
     }
 }

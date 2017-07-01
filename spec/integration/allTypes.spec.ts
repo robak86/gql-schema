@@ -3,50 +3,53 @@ import {buildASTSchema, GraphQLString, parse, printType} from "graphql";
 import {expect} from 'chai';
 import {GraphQLSchema} from "graphql/type/schema";
 import {createSchema} from "../../lib/factories/createSchema";
-import {args} from "../../lib/decorators/args";
+
 import {input} from "../../lib/index";
+import {args, array, field, notNull} from "../../lib/decorators/fields";
+import {argumentsObject} from "../../lib/decorators/args";
 
 function createdSchemaFromDecoratedClasses():GraphQLSchema {
 
-    @input.define()
+    @input()
     class UserSearchAddressParams {
-        @input.field({type: GraphQLString})
+        @field(GraphQLString)
         street:string;
     }
 
-    @input.define()
+    @input()
     class UserSearchParams {
-        @input.field({type: GraphQLString})
+        @field(GraphQLString)
         firstName:UserSearchAddressParams;
 
-        @input.field({type: UserSearchAddressParams})
+        @field(UserSearchAddressParams)
         address:UserSearchAddressParams
     }
 
-    @type.define()
+    @type()
     class User {
-        @type.field({type: GraphQLString})
+        @field(GraphQLString)
         firstName:string;
     }
 
-
+    @argumentsObject()
     class UsersArguments {
-        @args.field({type: UserSearchParams})
-        params: UserSearchParams
+        @field(UserSearchParams)
+        params:UserSearchParams
     }
 
-    @type.define()
+    @type()
     class Query {
-        @type.field({type: GraphQLString})
+        @field(GraphQLString)
         someQuery:string;
 
-        @type.array({type: User, args: UsersArguments})
+        @array(User) @notNull()
+        @args(UsersArguments)
         users:User[];
     }
 
-    @type.define()
+    @type()
     class Mutation {
-        @type.field({type: GraphQLString})
+        @field(GraphQLString)
         someMutation:string
     }
 
@@ -56,7 +59,6 @@ function createdSchemaFromDecoratedClasses():GraphQLSchema {
 
 function createSchemaFromDefinition():GraphQLSchema {
     const definition = `
-
             input UserSearchAddressParams {
                 street: String
             }
@@ -88,7 +90,7 @@ function expectTypesEqual(typeName:string) {
         .to.eql(printType(createSchemaFromDefinition().getType(typeName)));
 }
 
-describe.only("building schema", () => {
+describe("building schema", () => {
 
     describe("type Query", () => {
         it("generates proper type", () => {

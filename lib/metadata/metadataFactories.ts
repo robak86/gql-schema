@@ -1,11 +1,11 @@
 import {Type} from "../utils/types";
 import {IGraphQLMetadata} from "../abstract/IGraphQLMetadata";
 
-export function metadataGet<T extends IGraphQLMetadata>(metadataKey:string): (klass) => T {
+export function metadataGet<T>(metadataKey:string): (klass) => T {
     return (klass) => Reflect.getMetadata(metadataKey, klass);
 }
 
-export function metadataGetOrSet<T extends IGraphQLMetadata>(metadataKey:string, MetadataClass:Type<T>): (klass) => T {
+export function metadataGetOrSet<T>(metadataKey:string, MetadataClass:Type<T>): (klass) => T {
     return (klass) => {
         let nodeMetadata = Reflect.getOwnMetadata(metadataKey, klass);
 
