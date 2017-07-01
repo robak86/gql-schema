@@ -17,7 +17,7 @@ import {FieldConfig, FieldsMetadata} from "./FieldsMetadata";
 
 // export type ObjectFieldConfig = {
 //     type:ObjectFieldType;
-//     args?:GraphQLFieldConfigArgumentMap | Type<any>;
+//     params?:GraphQLFieldConfigArgumentMap | Type<any>;
 //     resolve?:GraphQLFieldResolver<any, any>;
 //     deprecationReason?:string;
 //     description?:string;

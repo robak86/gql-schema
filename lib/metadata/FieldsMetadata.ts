@@ -73,7 +73,7 @@ export class FieldsMetadata {
 
     // addField(fieldName:string, config:FieldConfig) {
     //     let type = inferGraphQLType(config.type);
-    //     let args = isPresent(config.args) ? inferGraphQLType(config.args as any, [ArgumentMapMetadata]) : null;
+    //     let params = isPresent(config.params) ? inferGraphQLType(config.params as any, [ArgumentMapMetadata]) : null;
     //
     //     if (config.nonNullItems && config.array) {
     //         type = new GraphQLList(new GraphQLNonNull(type))
@@ -87,7 +87,7 @@ export class FieldsMetadata {
     //         type = new GraphQLNonNull(type);
     //     }
     //
-    //     let converted = {..._.cloneDeep(config), type, args};
+    //     let converted = {..._.cloneDeep(config), type, params};
     //
     //     this.fields[fieldName] = converted as any;
     // }

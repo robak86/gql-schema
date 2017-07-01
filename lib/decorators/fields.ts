@@ -20,7 +20,7 @@ export const description = (description:string):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {description})
 };
 
-export const args = (argsType:Type<any> | GraphQLType):PropertyDecorator => {
+export const params = (argsType:Type<any> | GraphQLType):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {args: argsType})
 };
 

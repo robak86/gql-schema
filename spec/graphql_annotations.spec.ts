@@ -4,38 +4,38 @@
 //
 //
 // //TODO: add strong typings for [someGraphQlType]|SomeGraphQlType
-// function scalarField(...args:any[]):PropertyDecorator {
+// function scalarField(...params:any[]):PropertyDecorator {
 //     return (target:Object, propertyKey:string | symbol) => {
 //
 //     }
 // }
 //
 // //TODO: arrayField ?
-// function listField<O, I>(outputType:Type<O>, args:I, resolve:(input:I) => O):PropertyDecorator {
+// function listField<O, I>(outputType:Type<O>, params:I, resolve:(input:I) => O):PropertyDecorator {
 //     return (target:Object, propertyKey:string | symbol) => {
 //
 //     }
 // }
 //
-// function nonNullField(...args:any[]):PropertyDecorator {
+// function nonNullField(...params:any[]):PropertyDecorator {
 //     return (target:Object, propertyKey:string | symbol) => {
 //
 //     }
 // }
 //
-// // function listField(...args:any[]):PropertyDecorator {
+// // function listField(...params:any[]):PropertyDecorator {
 // //     return (target:Object, propertyKey:string | symbol) => {
 // //
 // //     }
 // // }
 //
-// function fieldParams(...args:any[]):PropertyDecorator {
+// function fieldParams(...params:any[]):PropertyDecorator {
 //     return (target:Object, propertyKey:string | symbol) => {
 //
 //     }
 // }
 //
-// function ObjectType(...args:any[]):ClassDecorator {
+// function ObjectType(...params:any[]):ClassDecorator {
 //     return (target) => target
 // }
 //
@@ -66,7 +66,7 @@
 //     @listField(RelatedType, SomeArguments, (input:SomeArguments) => 'sdf')
 //     sections2:RelatedType[]; //TODO: tutaj nie możemy definiować resolverów!!!!!! Sprawdzić czy to jest możliwe
 //
-// // @nonNullField([RelatedType], {args: SomeArguments});
+// // @nonNullField([RelatedType], {params: SomeArguments});
 // //     sections:RelatedType[]; //TODO: tutaj nie możemy definiować resolverów!!!!!! Sprawdzić czy to jest możliwe
 // }
 //

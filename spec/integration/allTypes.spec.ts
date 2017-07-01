@@ -5,8 +5,8 @@ import {GraphQLSchema} from "graphql/type/schema";
 import {createSchema} from "../../lib/factories/createSchema";
 
 import {input} from "../../lib/index";
-import {args, array, field, notNull} from "../../lib/decorators/fields";
-import {argumentsObject} from "../../lib/decorators/args";
+import {params, array, field, notNull} from "../../lib/decorators/fields";
+import {paramsObject} from "../../lib/decorators/args";
 
 function createdSchemaFromDecoratedClasses():GraphQLSchema {
 
@@ -31,7 +31,7 @@ function createdSchemaFromDecoratedClasses():GraphQLSchema {
         firstName:string;
     }
 
-    @argumentsObject()
+    @paramsObject()
     class UsersArguments {
         @field(UserSearchParams)
         params:UserSearchParams
@@ -43,7 +43,7 @@ function createdSchemaFromDecoratedClasses():GraphQLSchema {
         someQuery:string;
 
         @array(User) @notNull()
-        @args(UsersArguments)
+        @params(UsersArguments)
         users:User[];
     }
 
