@@ -1,3 +1,2 @@
 * infer basic types from ts metadata
-* add decorators for scalars ?
-
+* add decorators/factories for defining scalar ?

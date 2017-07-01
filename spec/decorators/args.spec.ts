@@ -1,8 +1,8 @@
 import {GraphQLString} from "graphql";
 import {expect} from 'chai';
 import {ArgumentMapMetadata} from "../../lib/metadata/ArgumentMapMetadata";
-import {paramsObject} from "../../lib/decorators/args";
 import {field} from "../../lib/decorators/fields";
+import {paramsObject} from "../../lib/decorators/paramsObject";
 
 
 describe("@params", () => {

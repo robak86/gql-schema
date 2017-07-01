@@ -6,7 +6,7 @@ import {createSchema} from "../../lib/factories/createSchema";
 
 import {input} from "../../lib/index";
 import {params, array, field, notNull} from "../../lib/decorators/fields";
-import {paramsObject} from "../../lib/decorators/args";
+import {paramsObject} from "../../lib/decorators/paramsObject";
 
 function createdSchemaFromDecoratedClasses():GraphQLSchema {
 

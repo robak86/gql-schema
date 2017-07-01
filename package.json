@@ -1,13 +1,13 @@
 {
   "name": "graphql-decorators",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Decorators for defining graphql schemas",
+  "main": "dist/lib/index.js",
   "scripts": {
     "test": "mocha --require dist/spec/SpecHelper.js dist/spec/**/*.spec.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Tomasz Robaczewski",
+  "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.0.0",
     "@types/graphql": "^0.9.1",
