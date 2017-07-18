@@ -1,55 +1,24 @@
 import 'reflect-metadata';
-import {
-    GraphQLField, GraphQLFieldConfig, GraphQLFieldConfigArgumentMap, GraphQLFieldResolver, GraphQLList, GraphQLNonNull,
-    GraphQLObjectType,
-    GraphQLOutputType
-} from "graphql";
+import {GraphQLInterfaceType, GraphQLIsTypeOfFn, GraphQLObjectType, Thunk} from "graphql";
 import {GRAPHQL_METADATA_KEY, IGraphQLMetadata} from "../abstract/IGraphQLMetadata";
-import {inferGraphQLType, TypeWrapperParams} from "../utils";
-import {ArgumentMapMetadata} from "./ArgumentMapMetadata";
-import {invariant, isPresent, someOrThrow} from "../utils/core";
+import {someOrThrow} from "../utils/core";
 import {Type} from "../utils/types";
 import {metadataGet, metadataGetOrSet} from "./metadataFactories";
-import * as _  from 'lodash';
-import {FieldConfig, FieldsMetadata} from "./FieldsMetadata";
+import * as _ from 'lodash';
+import {FieldsMetadata} from "./FieldsMetadata";
 
-// export type ObjectFieldType = GraphQLOutputType | Type<any>;
-
-// export type ObjectFieldConfig = {
-//     type:ObjectFieldType;
-//     params?:GraphQLFieldConfigArgumentMap | Type<any>;
-//     resolve?:GraphQLFieldResolver<any, any>;
-//     deprecationReason?:string;
-//     description?:string;
-// } & TypeWrapperParams;
-
-
-
-function convertFieldConfigToGraphQL(config:Partial<FieldConfig>):GraphQLFieldConfig<any, any>  {
-    let type = inferGraphQLType(config.type);
-    let args = isPresent(config.args) ? inferGraphQLType(config.args as any, [ArgumentMapMetadata]) : null;
-
-    if (config.notNullItem && config.array) {
-        type = new GraphQLList(new GraphQLNonNull(type))
-    }
-
-    if (!config.notNullItem && config.array) {
-        type = new GraphQLList(type)
-    }
-
-    if (config.notNull) {
-        type = new GraphQLNonNull(type);
-    }
-
-    return {..._.cloneDeep(config), type, args} as GraphQLFieldConfig<any, any>;
+export interface TypeConfig<TSource, TContext> {
+    name?:string;
+    interfaces?:Thunk<Array<GraphQLInterfaceType>> | Type<any>; //#TODO: allow for passing annotated classes
+    isTypeOf?:GraphQLIsTypeOfFn<TSource, TContext>; //#TODO: autopopulate with instanceof
+    description?:string
 }
-
 
 export class ObjectTypeMetadata implements IGraphQLMetadata {
     static getForClass = metadataGet<ObjectTypeMetadata>(GRAPHQL_METADATA_KEY);
     static getOrCreateForClass = metadataGetOrSet(GRAPHQL_METADATA_KEY, ObjectTypeMetadata);
 
-    // private fields:{ [fieldName:string]:GraphQLField<any, any> & { type:any } } = {};
+    private _config:TypeConfig<any, any>;
 
     constructor(private klass:Function) {
         this.toGraphQLType = _.memoize(this.toGraphQLType);
@@ -59,12 +28,16 @@ export class ObjectTypeMetadata implements IGraphQLMetadata {
         return this.klass.name
     }
 
+    setConfig(config:TypeConfig<any, any>) {
+        this._config = config;
+    }
+
     toGraphQLType():GraphQLObjectType {
         let fieldsMetadata = someOrThrow(FieldsMetadata.getForClass(this.klass), `Missing fields definition for ${this.klass.name}`);
 
         return new GraphQLObjectType({
             name: this.className,
-            fields: fieldsMetadata.getFields()
+            fields: () => fieldsMetadata.getFields()
         })
     }
 }

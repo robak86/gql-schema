@@ -1,17 +1,8 @@
 import {GRAPHQL_METADATA_KEY, IGraphQLMetadata} from "../abstract/IGraphQLMetadata";
-import {GraphQLFieldConfigArgumentMap, GraphQLInputType} from "graphql";
-import {TypeWrapperParams} from "../utils";
-import {Type} from "../utils/types";
+import {GraphQLFieldConfigArgumentMap} from "graphql";
 import {FieldsMetadata} from "./FieldsMetadata";
 import {metadataGet, metadataGetOrSet} from "./metadataFactories";
 import {someOrThrow} from "../utils/core";
-
-export type ArgumentConfig = {
-    type:GraphQLInputType | Type<any>;
-    defaultValue?:any;
-    description?:string;
-} & TypeWrapperParams;
-
 
 export class ArgumentMapMetadata implements IGraphQLMetadata {
     static getForClass = metadataGet<ArgumentMapMetadata>(GRAPHQL_METADATA_KEY);

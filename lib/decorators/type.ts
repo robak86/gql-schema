@@ -1,10 +1,11 @@
-import {ObjectTypeMetadata} from "../metadata/ObjectTypeMetadata";
-import {GraphQLInterfaceType} from "graphql";
-import {Type, Type as Klass} from "../utils/types";
+import {ObjectTypeMetadata, TypeConfig} from "../metadata/ObjectTypeMetadata";
+import {Type as Klass} from "../utils/types";
 
-export const type = (params?:{ interfaces:GraphQLInterfaceType | Type<any> }):ClassDecorator => {
+export const type = (config:TypeConfig<any, any> = {}):ClassDecorator => {
     return <T_FUNCTION extends Klass<any>>(klass:T_FUNCTION):T_FUNCTION => {
-        ObjectTypeMetadata.getOrCreateForClass(klass);
+        let objectTypeMetadata = ObjectTypeMetadata.getOrCreateForClass(klass);
+        objectTypeMetadata.setConfig(config);
+
         return klass;
     };
 };

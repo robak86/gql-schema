@@ -6,7 +6,7 @@ import {field} from "../../lib/decorators/fields";
 
 describe("@input", () => {
     describe("@input()", () => {
-        @input()
+        @input({description: 'Some description'})
         class SomeInputParams {
             @field(GraphQLString) someDummyField:string;
         }
@@ -17,6 +17,10 @@ describe("@input", () => {
 
         it("sets default name using class name", () => {
             expect(InputObjectTypeMetadata.getForClass(SomeInputParams).toGraphQLType().name).to.eq('SomeInputParams');
+        });
+
+        it("sets description property", () => {
+            expect(InputObjectTypeMetadata.getForClass(SomeInputParams).toGraphQLType().description).to.eq('Some description');
         });
     });
 

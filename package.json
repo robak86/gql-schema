@@ -20,7 +20,7 @@
     "typescript": "^2.3.4"
   },
   "dependencies": {
-    "graphql": "^0.10.1",
+    "graphql": "^0.10.5",
     "lodash": "^4.17.4"
   }
 }

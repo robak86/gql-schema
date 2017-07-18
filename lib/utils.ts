@@ -23,10 +23,3 @@ export function inferGraphQLType(klass:Type<any> | GraphQLType, allowedMetaData:
         return metadata.toGraphQLType();
     }
 }
-
-
-export type TypeWrapperParams = {
-    array?:boolean;
-    nonNullItems?:boolean;
-    nonNull?:boolean;
-}
