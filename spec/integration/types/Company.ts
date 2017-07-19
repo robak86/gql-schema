@@ -1,10 +1,15 @@
 import {type} from "../../../lib/decorators/type";
-import {arrayThunk} from "../../../lib/decorators/fields";
+import {arrayLazy, field, id} from "../../../lib/decorators/fields";
 import {User} from "./User";
-
+import {GraphQLString} from "graphql";
 
 @type()
 export class Company {
-    @arrayThunk(() => User)
-    employees:User;
+    @id() id:string;
+
+    @field(GraphQLString)
+    name:string;
+
+    @arrayLazy(() => User)
+    employees:User[];
 }

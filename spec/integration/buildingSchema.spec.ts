@@ -1,4 +1,4 @@
-import {buildASTSchema, parse, printType} from "graphql";
+import {buildASTSchema, graphql, parse, printType} from "graphql";
 import {expect} from 'chai';
 import {GraphQLSchema} from "graphql/type/schema";
 import {createSchema} from "../../lib/factories/createSchema";
@@ -23,7 +23,11 @@ function createSchemaFromDefinition():GraphQLSchema {
             }
 
             type User {
-                firstName:String!
+                id: ID!
+                firstName:String 
+                firstNameUpperCase: String
+                employers: [Company!]!
+                role: UserRole!
             }
 
             type Query {
@@ -33,6 +37,16 @@ function createSchemaFromDefinition():GraphQLSchema {
             
             type Mutation {
                 someMutation: String
+            }
+            
+            type Company {
+                employees:[User!]!
+            }
+            
+            enum UserRole {
+                admin 
+                stuff 
+                quest
             }
     `;
     return buildASTSchema(parse(definition));
@@ -52,6 +66,12 @@ describe("building schema", () => {
         });
     });
 
+    describe("type User", () => {
+        it("generates proper type", () => {
+            expectTypesEqual('User');
+        });
+    });
+
     describe("type Mutation", () => {
         it("generates proper type", () => {
             expectTypesEqual('Mutation');
@@ -65,6 +85,12 @@ describe("building schema", () => {
     });
 
     describe("input UserSearchAddressParams", () => {
+        it("generates proper type", () => {
+            expectTypesEqual('UserSearchAddressParams');
+        });
+    });
+
+    describe("enum UserSearchAddressParams", () => {
         it("generates proper type", () => {
             expectTypesEqual('UserSearchAddressParams');
         });

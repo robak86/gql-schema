@@ -1,5 +1,5 @@
 import {FieldConfig, FieldsMetadata} from "../metadata/FieldsMetadata";
-import {GraphQLType} from "graphql";
+import {GraphQLID, GraphQLType} from "graphql";
 import {Type} from "../utils/types";
 import {invariant} from "../utils/core";
 import * as _ from 'lodash';
@@ -10,12 +10,19 @@ function patchField(target, propertyKey, partialConfig:Partial<FieldConfig>) {
     fieldsMetadata.patchConfig(propertyKey, partialConfig);
 }
 
+export const id = ():PropertyDecorator => {
+    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {
+        type: GraphQLID,
+        notNull: true
+    })
+};
+
 export const field = (type:Type<any> | GraphQLType):PropertyDecorator => {
     invariant(!!type, `@field decorator called with undefined or null value`);
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {type})
 };
 
-export const fieldThunk = (thunkType:() => Type<any> | GraphQLType):PropertyDecorator => {
+export const fieldLazy = (thunkType:() => Type<any> | GraphQLType):PropertyDecorator => {
     invariant(_.isFunction(thunkType), `@fieldThunk decorator called with non function param`);
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {thunkType})
 };
@@ -46,7 +53,7 @@ export const array = (type:Type<any> | GraphQLType, notNullItem:boolean = true):
     }
 };
 
-export const arrayThunk = (thunkType:() => Type<any> | GraphQLType, notNullItem:boolean = true):PropertyDecorator => {
+export const arrayLazy = (thunkType:() => Type<any> | GraphQLType, notNullItem:boolean = true):PropertyDecorator => {
     invariant(!!thunkType, `@arrayThunk decorator called with undefined or null value`);
     return (target:Object, propertyKey:string) => {
         patchField(target, propertyKey, {

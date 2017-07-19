@@ -1,9 +1,29 @@
-import {array, description, field, notNull} from "../../lib/decorators/fields";
-import {GraphQLString} from "graphql";
+import {array, description, field, fieldLazy, notNull, arrayLazy, id} from "../../lib/decorators/fields";
+import {GraphQLID, GraphQLString} from "graphql";
 import {FieldsMetadata} from "../../lib/metadata/FieldsMetadata";
 import {expect} from 'chai';
 
 describe("fields decorators", () => {
+    describe("@id()", () => {
+        class SomeClass {
+            @id()
+            someField:string
+        }
+
+        let fieldConfig;
+        beforeEach(() => {
+            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+        });
+
+        it("adds type to property config", () => {
+            expect(fieldConfig.type).to.eq(GraphQLID);
+        });
+
+        it("uses defaults values", () => {
+            expect(fieldConfig.notNull).to.eq(true);
+        });
+    });
+
     describe("@field()", () => {
         class SomeClass {
             @field(GraphQLString)
@@ -26,6 +46,28 @@ describe("fields decorators", () => {
         });
     });
 
+    describe("@fieldLazy()", () => {
+        class SomeClass {
+            @fieldLazy(() => GraphQLString)
+            someField:string
+        }
+
+        let fieldConfig;
+        beforeEach(() => {
+            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+        });
+
+        it("adds thunkType to property config", () => {
+            expect(fieldConfig.thunkType()).to.eq(GraphQLString);
+        });
+
+        it("uses defaults values", () => {
+            expect(fieldConfig.notNull).to.eq(false);
+            expect(fieldConfig.array).to.eq(false);
+            expect(fieldConfig.notNullItem).to.eq(false);
+        });
+    });
+
     describe("@array()", () => {
         class SomeClass {
             @array(GraphQLString)
@@ -39,6 +81,26 @@ describe("fields decorators", () => {
 
         it("adds type to property config", () => {
             expect(fieldConfig.type).to.eq(GraphQLString);
+        });
+
+        it("sets array config property to true", () => {
+            expect(fieldConfig.array).to.eq(true);
+        });
+    });
+
+    describe("@arrayLazy()", () => {
+        class SomeClass {
+            @arrayLazy(() => GraphQLString)
+            someField:string
+        }
+
+        let fieldConfig;
+        beforeEach(() => {
+            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+        });
+
+        it("adds type to property config", () => {
+            expect(fieldConfig.thunkType()).to.eq(GraphQLString);
         });
 
         it("sets array config property to true", () => {
