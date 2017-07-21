@@ -47,7 +47,7 @@ function createSchemaFromDefinition():GraphQLSchema {
             enum UserRole {
                 admin 
                 stuff 
-                quest
+                guest
             }
             
             union SearchResult = User | Company

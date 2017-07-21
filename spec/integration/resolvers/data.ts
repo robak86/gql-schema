@@ -20,7 +20,7 @@ export function getAllUsers():UserEntity[] {
     return [
         {id: '1', firstName: 'Jane', role:'admin', employersIds: ['1'], type: 'user'},
         {id: '2', firstName: 'John', role:'stuff', employersIds: ['2'], type: 'user'},
-        {id: '3', firstName: 'Adam', role:'quest', employersIds: ['3'], type: 'user'},
+        {id: '3', firstName: 'Adam', role:'guest', employersIds: ['3'], type: 'user'},
     ]
 }
 

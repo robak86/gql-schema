@@ -57,7 +57,7 @@ describe("root query", () => {
                     id: '3',
                     firstName: 'Adam',
                     firstNameUpperCase: 'ADAM',
-                    role: 'quest',
+                    role: 'guest',
                     employers: [
                         {
                             id: "3",

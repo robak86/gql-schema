@@ -1,5 +1,4 @@
 import {Type} from "../utils/types";
-import {IGraphQLMetadata} from "../abstract/IGraphQLMetadata";
 
 export function metadataGet<T>(metadataKey:string): (klass) => T {
     return (klass) => Reflect.getMetadata(metadataKey, klass);
