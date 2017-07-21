@@ -1,4 +1,4 @@
-import {array, description, field, fieldLazy, notNull, arrayLazy, id} from "../../lib/decorators/fields";
+import {list, description, field, fieldLazy, nonNull, listLazy, id} from "../../lib/decorators/fields";
 import {GraphQLID, GraphQLString} from "graphql";
 import {FieldsMetadata} from "../../lib/metadata/FieldsMetadata";
 import {expect} from 'chai';
@@ -20,7 +20,7 @@ describe("fields decorators", () => {
         });
 
         it("uses defaults values", () => {
-            expect(fieldConfig.notNull).to.eq(true);
+            expect(fieldConfig.nonNull).to.eq(true);
         });
     });
 
@@ -40,9 +40,9 @@ describe("fields decorators", () => {
         });
 
         it("uses defaults values", () => {
-            expect(fieldConfig.notNull).to.eq(false);
+            expect(fieldConfig.nonNull).to.eq(false);
             expect(fieldConfig.array).to.eq(false);
-            expect(fieldConfig.notNullItem).to.eq(false);
+            expect(fieldConfig.nonNullItem).to.eq(false);
         });
     });
 
@@ -62,15 +62,15 @@ describe("fields decorators", () => {
         });
 
         it("uses defaults values", () => {
-            expect(fieldConfig.notNull).to.eq(false);
+            expect(fieldConfig.nonNull).to.eq(false);
             expect(fieldConfig.array).to.eq(false);
-            expect(fieldConfig.notNullItem).to.eq(false);
+            expect(fieldConfig.nonNullItem).to.eq(false);
         });
     });
 
-    describe("@array()", () => {
+    describe("@list()", () => {
         class SomeClass {
-            @array(GraphQLString)
+            @list(GraphQLString)
             someField:string
         }
 
@@ -83,14 +83,14 @@ describe("fields decorators", () => {
             expect(fieldConfig.type).to.eq(GraphQLString);
         });
 
-        it("sets array config property to true", () => {
+        it("sets list config property to true", () => {
             expect(fieldConfig.array).to.eq(true);
         });
     });
 
-    describe("@arrayLazy()", () => {
+    describe("@listLazy()", () => {
         class SomeClass {
-            @arrayLazy(() => GraphQLString)
+            @listLazy(() => GraphQLString)
             someField:string
         }
 
@@ -103,7 +103,7 @@ describe("fields decorators", () => {
             expect(fieldConfig.thunkType()).to.eq(GraphQLString);
         });
 
-        it("sets array config property to true", () => {
+        it("sets list config property to true", () => {
             expect(fieldConfig.array).to.eq(true);
         });
     });
@@ -111,7 +111,7 @@ describe("fields decorators", () => {
     describe("decorators chaining", () => {
         class SomeClass {
             @description('Some Field description')
-            @array(GraphQLString) @notNull()
+            @list(GraphQLString) @nonNull()
             someField:string
         }
 
@@ -124,16 +124,16 @@ describe("fields decorators", () => {
             expect(fieldConfig.type).to.eq(GraphQLString);
         });
 
-        it("sets array config property to true", () => {
+        it("sets list config property to true", () => {
             expect(fieldConfig.array).to.eq(true);
         });
 
-        it("sets notNullItem", () => {
-            expect(fieldConfig.notNullItem).to.eq(true);
+        it("sets nonNullItem", () => {
+            expect(fieldConfig.nonNullItem).to.eq(true);
         });
 
-        it("sets notNull", () => {
-            expect(fieldConfig.notNull).to.eq(true);
+        it("sets nonNull", () => {
+            expect(fieldConfig.nonNull).to.eq(true);
         });
 
         it("sets description", () => {

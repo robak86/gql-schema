@@ -1,5 +1,5 @@
 import {type} from "../../../lib/decorators/type";
-import {arrayLazy, field, id} from "../../../lib/decorators/fields";
+import {listLazy, field, id} from "../../../lib/decorators/fields";
 import {User} from "./User";
 import {GraphQLString} from "graphql";
 
@@ -10,6 +10,6 @@ export class Company {
     @field(GraphQLString)
     name:string;
 
-    @arrayLazy(() => User)
+    @listLazy(() => User)
     employees:User[];
 }

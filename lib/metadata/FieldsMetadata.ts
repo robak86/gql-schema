@@ -14,9 +14,9 @@ const FIELDS_METADATA_KEY = '__FIELDS_METADATA_KEY';
 export interface FieldConfig {
     type:Type<any> | GraphQLType
     thunkType:Thunk<Type<any> | GraphQLType>
-    notNull:boolean
+    nonNull:boolean
     array:boolean
-    notNullItem:boolean
+    nonNullItem:boolean
     resolve?:Function
     description?:string;
     args?:Type<any> | GraphQLType
@@ -33,15 +33,15 @@ function convertFieldConfigToGraphQL(config:Partial<FieldConfig>):GraphQLFieldCo
 
     let args = isPresent(config.args || resolveThunk(config.thunkArgs)) ? inferGraphQLType(config.args as any, [ArgumentMapMetadata]) : null;
 
-    if (config.notNullItem && config.array) {
+    if (config.nonNullItem && config.array) {
         type = new GraphQLList(new GraphQLNonNull(type))
     }
 
-    if (!config.notNullItem && config.array) {
+    if (!config.nonNullItem && config.array) {
         type = new GraphQLList(type)
     }
 
-    if (config.notNull) {
+    if (config.nonNull) {
         type = new GraphQLNonNull(type);
     }
 
@@ -74,9 +74,9 @@ export class FieldsMetadata {
 
     private existingPropsOrDefaults(fieldName:string) {
         return this.fields[fieldName] || {
-            notNull: false,
+            nonNull: false,
             array: false,
-            notNullItem: false
+            nonNullItem: false
         };
     }
 }

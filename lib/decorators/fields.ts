@@ -13,7 +13,7 @@ function patchField(target, propertyKey, partialConfig:Partial<FieldConfig>) {
 export const id = ():PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {
         type: GraphQLID,
-        notNull: true
+        nonNull: true
     })
 };
 
@@ -27,8 +27,8 @@ export const fieldLazy = (thunkType:() => Type<any> | GraphQLType):PropertyDecor
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {thunkType})
 };
 
-export const notNull = ():PropertyDecorator => {
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {notNull: true})
+export const nonNull = ():PropertyDecorator => {
+    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {nonNull: true})
 };
 
 export const description = (description:string):PropertyDecorator => {
@@ -43,22 +43,22 @@ export const resolve = (resolve:Function):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {resolve})
 };
 
-export const array = (type:Type<any> | GraphQLType, notNullItem:boolean = true):PropertyDecorator => {
+export const list = (type:Type<any> | GraphQLType, notNullItem:boolean = true):PropertyDecorator => {
     invariant(!!type, `@array decorator called with undefined or null value`);
     return (target:Object, propertyKey:string) => {
         patchField(target, propertyKey, {
             array: true,
-            notNullItem,
+            nonNullItem: notNullItem,
             type})
     }
 };
 
-export const arrayLazy = (thunkType:() => Type<any> | GraphQLType, notNullItem:boolean = true):PropertyDecorator => {
+export const listLazy = (thunkType:() => Type<any> | GraphQLType, notNullItem:boolean = true):PropertyDecorator => {
     invariant(!!thunkType, `@arrayThunk decorator called with undefined or null value`);
     return (target:Object, propertyKey:string) => {
         patchField(target, propertyKey, {
             array: true,
-            notNullItem,
+            nonNullItem: notNullItem,
             thunkType})
     }
 };
