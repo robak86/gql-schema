@@ -1,4 +1,4 @@
-import {buildASTSchema, graphql, parse, printType} from "graphql";
+import {buildASTSchema, parse, printType} from "graphql";
 import {expect} from 'chai';
 import {GraphQLSchema} from "graphql/type/schema";
 import {createSchema} from "../../lib/factories/createSchema";

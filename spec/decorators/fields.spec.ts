@@ -1,4 +1,4 @@
-import {list, description, field, fieldLazy, nonNull, listLazy, id} from "../../lib/decorators/fields";
+import {list, description, field, fieldLazy, nonNull, listLazy, id, nonNullItems} from "../../lib/decorators/fields";
 import {GraphQLID, GraphQLString} from "graphql";
 import {FieldsMetadata} from "../../lib/metadata/FieldsMetadata";
 import {expect} from 'chai';
@@ -111,7 +111,7 @@ describe("fields decorators", () => {
     describe("decorators chaining", () => {
         class SomeClass {
             @description('Some Field description')
-            @list(GraphQLString) @nonNull()
+            @list(GraphQLString) @nonNull() @nonNullItems()
             someField:string
         }
 

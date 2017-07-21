@@ -31,6 +31,10 @@ export const nonNull = ():PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {nonNull: true})
 };
 
+export const nonNullItems = ():PropertyDecorator => {
+    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {nonNullItem: true})
+};
+
 export const description = (description:string):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {description})
 };
@@ -43,22 +47,22 @@ export const resolve = (resolve:Function):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {resolve})
 };
 
-export const list = (type:Type<any> | GraphQLType, notNullItem:boolean = true):PropertyDecorator => {
+export const list = (type:Type<any> | GraphQLType):PropertyDecorator => {
     invariant(!!type, `@array decorator called with undefined or null value`);
     return (target:Object, propertyKey:string) => {
         patchField(target, propertyKey, {
             array: true,
-            nonNullItem: notNullItem,
-            type})
+            type
+        })
     }
 };
 
-export const listLazy = (thunkType:() => Type<any> | GraphQLType, notNullItem:boolean = true):PropertyDecorator => {
+export const listLazy = (thunkType:() => Type<any> | GraphQLType):PropertyDecorator => {
     invariant(!!thunkType, `@arrayThunk decorator called with undefined or null value`);
     return (target:Object, propertyKey:string) => {
         patchField(target, propertyKey, {
             array: true,
-            nonNullItem: notNullItem,
-            thunkType})
+            thunkType
+        })
     }
 };

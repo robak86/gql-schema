@@ -1,5 +1,5 @@
 import {Company} from "./Company";
-import {listLazy, field, id, nonNull, resolve} from "../../../lib/decorators/fields";
+import {listLazy, field, id, nonNull, resolve, nonNullItems} from "../../../lib/decorators/fields";
 import {GraphQLString} from "graphql";
 import {type} from "../../../lib/decorators/type";
 import {resolveEmployersForUser} from "../resolvers/queries";
@@ -17,7 +17,8 @@ export class User {
     @field(GraphQLString) @resolve((user:User) => user.firstName.toUpperCase())
     firstNameUpperCase:string;
 
-    @listLazy(() => Company) @nonNull() @resolve(resolveEmployersForUser)
+    @listLazy(() => Company) @nonNull() @nonNullItems()
+    @resolve(resolveEmployersForUser)
     employers:Company[];
 
     @field(UserRoleType) @nonNull()
