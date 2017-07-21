@@ -8,7 +8,7 @@ import {UserRole, UserRoleType} from "./UserRole";
 
 @type()
 export class User {
-    @id()
+    @id() @nonNull()
     id:string;
 
     @field(GraphQLString)

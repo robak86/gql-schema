@@ -12,8 +12,7 @@ function patchField(target, propertyKey, partialConfig:Partial<FieldConfig>) {
 
 export const id = ():PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {
-        type: GraphQLID,
-        nonNull: true
+        type: GraphQLID
     })
 };
 

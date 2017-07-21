@@ -20,7 +20,7 @@ describe("fields decorators", () => {
         });
 
         it("uses defaults values", () => {
-            expect(fieldConfig.nonNull).to.eq(true);
+            expect(fieldConfig.nonNull).to.eq(false);
         });
     });
 

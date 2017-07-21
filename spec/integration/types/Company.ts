@@ -1,11 +1,13 @@
 import {type} from "../../../lib/decorators/type";
-import {listLazy, field, id} from "../../../lib/decorators/fields";
+import {field, id, listLazy} from "../../../lib/decorators/fields";
 import {User} from "./User";
 import {GraphQLString} from "graphql";
+import {nonNull} from "../../../lib/index";
 
 @type()
 export class Company {
-    @id() id:string;
+    @id() @nonNull()
+    id:string;
 
     @field(GraphQLString)
     name:string;

@@ -108,6 +108,7 @@ describe("root query", () => {
             `;
 
             let response = await graphql(schema, query, {}, {}, {firstName: 'J'});
+            console.log(response);
             let expectedResponseData = [
                 {
                     __typename: "User",
