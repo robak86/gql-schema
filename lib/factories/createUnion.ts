@@ -7,8 +7,8 @@ export function createUnion(name:string, types:Thunk<Array<GraphQLObjectType|Fun
     return new GraphQLUnionType({
         name,
         types: _.castArray(types).map(type => inferGraphQLType(type as any, [ObjectTypeMetadata])),
-        resolveType: () => {
-            throw new Error('createUnion resolveType not implemented');
+        resolveType: (value, context) => {
+            return inferGraphQLType(resolveType(value,context));
         }
     });
 }

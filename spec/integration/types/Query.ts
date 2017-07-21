@@ -3,7 +3,8 @@ import {GraphQLString} from "graphql";
 import {array, field, notNull, params, resolve} from "../../../lib/decorators/fields";
 import {User} from "./User";
 import {UsersArguments} from "./UserSearch";
-import {resolveUsers} from "../resolvers/queries";
+import {resolveFakeSearch, resolveUsers} from "../resolvers/queries";
+import {SearchResult, SearchResultType} from "./SearchResult";
 
 
 @type()
@@ -13,4 +14,7 @@ export class Query {
 
     @array(User) @notNull() @params(UsersArguments) @resolve(resolveUsers)
     users:User[];
+
+    @array(SearchResultType) @notNull() @resolve(resolveFakeSearch)
+    search:SearchResult;
 }

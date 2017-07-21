@@ -33,6 +33,7 @@ function createSchemaFromDefinition():GraphQLSchema {
             type Query {
                 someQuery: String
                 users(params: UserSearchParams): [User!]!
+                search: [SearchResult!]!
             }
             
             type Mutation {
@@ -48,6 +49,8 @@ function createSchemaFromDefinition():GraphQLSchema {
                 stuff 
                 quest
             }
+            
+            union SearchResult = User | Company
     `;
     return buildASTSchema(parse(definition));
 }
