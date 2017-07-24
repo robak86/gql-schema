@@ -5,3 +5,4 @@ export * from './decorators/paramsObject';
 
 export * from './factories/createEnum';
 export * from './factories/createUnion';
+export * from './factories/createSchema';

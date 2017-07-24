@@ -5,13 +5,13 @@ import {paramsObject} from "../../../lib/decorators/paramsObject";
 
 
 @input({description: `User search address params`})
-class UserSearchAddressParams {
+export class UserSearchAddressParams {
     @field(GraphQLString)
     street:string;
 }
 
 @input()
-class UserSearchParams {
+export class UserSearchParams {
     @field(GraphQLString)
     firstName:UserSearchAddressParams;
 

@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "sourceMap": true,
+    "sourceMap": false,
     "target": "es5",
     "lib": ["es6", "dom"],
-    "types": ["reflect-metadata", "mocha",  "chai"],
+    "types": ["reflect-metadata", "mocha",  "chai", "graphql"],
     "module": "commonjs",
+    "noUnusedLocals": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "declaration": true,
     "typeRoots" : [
       "./node_modules/@types"
     ]
