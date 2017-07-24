@@ -4,7 +4,7 @@ Experimental(pre alpha) library for defining graphql schemas using decorators
 
 ## Getting started
 
-This tool requires node.js 4.4.0 or later and uses es7 decorators. Make sure your tsconfig.json has ```experimentalDecorators``` set to true ```true``` 
+This library requires node.js 4.4.0 or later and uses es7 decorators. Make sure your tsconfig.json has ```experimentalDecorators``` set to true ```true``` 
 
 ```json
 {
@@ -53,34 +53,34 @@ main();
 ```
 
 
-## Decorators for ```GraphQLObjectType```  
+## ```@type``` decorator
  
 ```typescript
 import {type, field, list, nonNull, nonNullItems, resolve, description, id, paramsObject, params} from 'graphql-decorators';
 import {GraphQLString, GraphQLInt} from "graphql";
 
-const resolveFunction = (_, args:SomeParams, ctx):SomeType => {
-    // return SomeData type. For most cases it would be Partial<SomeData> because nested data will be resolved by other resolvers
-}
+const resolveFunction = (_, args:SomeParams, ctx):Partial<SomeType> => {
+    return {} // return SomeData type. For most cases it would be Partial<SomeData> because nested data will be resolved by other resolvers
+};
 
 @type({description: 'SomeType description'})
 class SomeType {
     @description('id field description')
     @id() @nonNull()
     id:string;
-    
-    @field(GraphQLInt) 
+
+    @field(GraphQLInt)
     someNullableField?:number;
-    
+
     @field(GraphQLString) @nonNull()
     nonNullableField:string;
-    
-    @list(GraphQLString) 
+
+    @list(GraphQLString)
     nullableListWithNullItemsAllowed?: string[];
-    
+
     @list(GraphQLString) @nonNull()
     nonNullableListWithNullItemsAllowed: string[];
-    
+
     @list(GraphQLString) @nonNull() @nonNullItems()
     nonNullableListWithNullItemsForbidden: string[]
 }
@@ -91,11 +91,11 @@ class SomeParams {
     someParam:string
 }
 
-@type() 
+@type()
 class Query {
     @field(SomeType) @nonNull()
     @params(SomeParams) @resolve(resolveFunction)
-    someData:SomeType    
+    someData:SomeType
 }
 ```
 
@@ -119,5 +119,104 @@ type Query {
 
 ```
 
-## Decorators for ```GraphQLInputObjectType```
-TODO
+## ```@input``` decorator
+
+```typescript
+import {field, input, nonNull, params, paramsObject, resolve, type} from 'graphql-decorators';
+import {GraphQLString} from "graphql";
+
+const createUser = (_, args:CreateUserParams, ctx):Partial<User> => {
+    return {}
+};
+
+@input()
+class NewUserParams {
+    @field(GraphQLString) @nonNull()
+    email:string;
+
+    @field(GraphQLString) @nonNull()
+    firstName:string;
+
+    @field(GraphQLString) @nonNull()
+    password:string;
+}
+
+@input()
+class NewUserAddressParams {
+    @field(GraphQLString) @nonNull()
+    street:string;
+
+    @field(GraphQLString) @nonNull()
+    city:string;
+}
+
+@paramsObject()
+class CreateUserParams {
+    @field(NewUserParams) @nonNull()
+    userParams:NewUserParams;
+
+    @field(NewUserAddressParams) @nonNull()
+    userAddressParams:NewUserAddressParams;
+}
+
+
+@type()
+class Address {
+    @field(GraphQLString) @nonNull()
+    street:string;
+
+    @field(GraphQLString) @nonNull()
+    city:string;
+}
+
+@type()
+class User {
+    @field(GraphQLString) @nonNull()
+    email:string;
+
+    @field(GraphQLString) @nonNull()
+    firstName:string;
+
+    @field(Address) @nonNull()
+    address:Address
+}
+
+
+@type()
+class Mutation {
+    @field(User) @nonNull()
+    @params(CreateUserParams) @resolve(createUser)
+    createUser:User
+}
+```
+
+Given annotated classes will generate following schema definition
+
+```graphql schema
+input NewUserParams {
+    email:String!
+    firstName:String!
+    password:String!
+}
+
+input NewUserAddressParams{
+    street: String!
+    city: String!
+} 
+
+type User {
+    email:String!
+    firstName:String!
+    address:Address!
+}
+
+type Address {
+    street: String!
+    city: String!
+}
+
+type Mutation {
+    createUser(userParams: NewUserParams, addressParams: NewUserAddressParams):User!
+}
+
+```
