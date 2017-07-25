@@ -5,7 +5,7 @@ import {invariant} from "../utils/core";
 import * as _ from 'lodash';
 import {
     GraphQLInterfaceType, GraphQLObjectType, GraphQLScalarType, GraphQLUnionType, GraphQLEnumType,
-    GraphQLInputObjectType, GraphQLList, GraphQLNonNull
+    GraphQLInputObjectType, GraphQLList, GraphQLNonNull, GraphQLID
 } from "graphql";
 
 
@@ -27,7 +27,7 @@ function patchField(target, propertyKey, partialConfig:Partial<FieldConfig>) {
 
 export const id = ():PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {
-        type: null
+        type: GraphQLID
     })
 };
 
