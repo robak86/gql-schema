@@ -3,3 +3,5 @@ node_modules
 dist
 *.iml
 .DS_Store
+.nyc_output
+coverage
