@@ -5,12 +5,14 @@
   "repository": "https://github.com/robak86/graphql-decorators",
   "main": "lib/index.js",
   "scripts": {
+    "mocha": "mocha",
     "test": "mocha --require dist/spec/SpecHelper.js dist/spec/**/*.spec.js",
     "build:clean": "rm -rf ./dist && mkdir -p dist/lib",
-    "build:copy": "cp package.json ./dist/lib/",
+    "build:copy": "cp package.json ./dist/lib/ && cp README.md ./dist/lib/",
     "build:compile": "tsc",
-    "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile",
-    "build:watch": "npm run build:clean && npm run build:copy && tsc --watch"
+    "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile && npm run test",
+    "build:watch": "npm run build:clean && npm run build:copy && tsc --watch",
+    "coverage": "nyc --reporter=text mocha -- -- spec dist/spec/**/*.spec.js"
   },
   "author": "Tomasz Robaczewski",
   "license": "MIT",
@@ -23,7 +25,7 @@
     "mocha": "^3.4.2",
     "reflect-metadata": "^0.1.10",
     "source-map-support": "^0.4.15",
-    "typescript": "^2.3.4"
+    "typescript": "^2.4.2"
   },
   "dependencies": {
     "graphql": "^0.10.5",
