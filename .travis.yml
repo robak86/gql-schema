@@ -2,9 +2,12 @@ sudo: required
 language: node_js
 node_js:
   - "7"
-  - "6"
-  - "5"
-  - "4"
+#  - "6"
+#  - "5"
+#  - "4"
 
 before_script:
   - npm run build:dist
+
+after_script:
+  - npm run build:coverage

@@ -1,6 +1,8 @@
 # graphql-decorators
 
-Experimental(pre alpha) library for defining graphql schemas using decorators
+[![Build Status](https://travis-ci.org/robak86/graphql-decorators.svg?branch=master)](https://travis-ci.org/robak86/graphql-decorators)
+
+Yet another experimental library for defining graphql schemas using decorators. Not already published - alpha status. 
 
 ## Getting started
 

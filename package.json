@@ -10,9 +10,9 @@
     "build:clean": "rm -rf ./dist && mkdir -p dist/lib",
     "build:copy": "cp package.json ./dist/lib/ && cp README.md ./dist/lib/",
     "build:compile": "tsc",
-    "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile",
+    "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile && npm run build:test",
     "build:watch": "npm run build:clean && npm run build:copy && tsc --watch",
-    "build:coverage": "nyc --reporter=text mocha -- -- spec dist/spec/**/*.spec.js"
+    "build:coverage": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js | coveralls"
   },
   "author": "Tomasz Robaczewski",
   "license": "MIT",
@@ -22,6 +22,7 @@
     "@types/lodash": "^4.14.65",
     "@types/mocha": "^2.2.41",
     "chai": "^4.0.2",
+    "coveralls": "^2.13.1",
     "mocha": "^3.4.2",
     "nyc": "^11.0.3",
     "reflect-metadata": "^0.1.10",
