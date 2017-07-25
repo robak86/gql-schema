@@ -29,7 +29,7 @@ function resolveThunk<T>(thunk:Thunk<T>):T {
 
 function convertFieldConfigToGraphQL(config:Partial<FieldConfig>):GraphQLFieldConfig<any, any> {
     let type = inferGraphQLType(config.type || resolveThunk(config.thunkType));
-    invariant(type, `Cannot infer type`);
+    invariant(!!type, `Cannot infer type`); //TODO: add more reliable way for checking if type is correct
 
     let args = isPresent(config.args || resolveThunk(config.thunkArgs)) ? inferGraphQLType(config.args as any, [ArgumentMapMetadata]) : null;
 
