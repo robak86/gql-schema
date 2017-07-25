@@ -10,7 +10,7 @@
     "build:clean": "rm -rf ./dist && mkdir -p dist/lib",
     "build:copy": "cp package.json ./dist/lib/ && cp README.md ./dist/lib/",
     "build:compile": "tsc",
-    "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile && npm run build:test",
+    "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile",
     "build:watch": "npm run build:clean && npm run build:copy && tsc --watch",
     "build:coverage": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js | coveralls"
   },
