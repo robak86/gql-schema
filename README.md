@@ -1,7 +1,6 @@
 # graphql-decorators
 
 [![Build Status](https://travis-ci.org/robak86/graphql-decorators.svg?branch=master)](https://travis-ci.org/robak86/graphql-decorators)
-
 [![Coverage Status](https://coveralls.io/repos/github/robak86/graphql-decorators/badge.svg?branch=master)](https://coveralls.io/github/robak86/graphql-decorators?branch=master)
 
 Yet another experimental library for defining graphql schemas using decorators. Not already published - alpha status. 
