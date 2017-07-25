@@ -145,11 +145,6 @@ describe("@type", () => {
                 let someFieldArgs = graphQLObjectType.getFields()['someField'].args;
                 expect(someFieldArgs[0].type).to.eq(GraphQLString);
                 expect(someFieldArgs[0].name).to.eq('someArgument');
-
-
-                console.log(printSchema(new GraphQLSchema({
-                    query: ObjectTypeMetadata.getOrCreateForClass(SomeType).toGraphQLType()
-                })));
             });
         });
     });
