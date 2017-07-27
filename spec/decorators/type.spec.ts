@@ -5,8 +5,8 @@ import {createUnion} from "../../lib/factories/createUnion";
 import * as _ from 'lodash/fp';
 import {createEnum} from "../../lib/factories/createEnum";
 import {type} from "../../lib/decorators/type";
-import {field, params, resolve} from "../../lib";
-import {paramsObject} from "../../lib/index";
+import {field, args, resolve} from "../../lib";
+import {argsType} from "../../lib/index";
 import {decorateEnum} from "../../lib/decorators/enum";
 
 describe("@type", () => {
@@ -157,7 +157,7 @@ describe("@type", () => {
 
         describe("arguments", () => {
 
-            @paramsObject()
+            @argsType()
             class SomeFieldArguments {
                 @field(GraphQLString)
                 someArgument:string;
@@ -166,11 +166,11 @@ describe("@type", () => {
             @type()
             class SomeType {
                 @field(GraphQLString)
-                @params(SomeFieldArguments)
+                @args(SomeFieldArguments)
                 someField:string;
             }
 
-            it("accepts annotated class for params parameter", () => {
+            it("accepts annotated class for args parameter", () => {
                 let graphQLObjectType = ObjectTypeMetadata.getOrCreateForClass(SomeType).toGraphQLType();
                 let someFieldArgs = graphQLObjectType.getFields()['someField'].args;
                 expect(someFieldArgs[0].type).to.eq(GraphQLString);

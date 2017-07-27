@@ -2,16 +2,25 @@ import {GraphQLString} from "graphql";
 import {expect} from 'chai';
 import {ArgumentMapMetadata} from "../../lib/metadata/ArgumentMapMetadata";
 import {field} from "../../lib";
-import {paramsObject} from "../../lib/decorators/paramsObject";
+import {argsType} from "../../lib/decorators/argsType";
 
 
-describe("@params", () => {
-    describe("@argumentField", () => {
-        it("creates registers configuration for annotated property", () => {
+describe("argsType decorator", () => {
+    describe("@argsType()", () => {
+        @argsType()
+        class SomeArgsType {
+            @field(GraphQLString) _:string
+        }
 
-            @paramsObject()
+        it("attaches metadata object", () => {
+            expect(ArgumentMapMetadata.getForClass(SomeArgsType)).to.be.instanceof(ArgumentMapMetadata)
+        });
+    });
+
+    describe("@field", () => {
+        it("registers property", () => {
+            @argsType()
             class SomeClass {
-
                 @field(GraphQLString)
                 arg1:string
             }

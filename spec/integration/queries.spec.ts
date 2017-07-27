@@ -70,7 +70,7 @@ describe("root query", () => {
         });
     });
 
-    describe("query with params", () => {
+    describe("query with args", () => {
         it("returns correct data", async () => {
             let query = `
                 query Users($firstName: String){

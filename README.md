@@ -58,7 +58,7 @@ main();
 ## ```@type``` decorator
  
 ```typescript
-import {type, field, list, nonNull, nonNullItems, resolve, description, id, paramsObject, params} from 'graphql-decorators';
+import {type, field, list, nonNull, nonNullItems, resolve, description, id, argsType, args} from 'graphql-decorators';
 import {GraphQLString, GraphQLInt} from "graphql";
 
 const resolveFunction = (_, args:SomeParams, ctx):Partial<SomeType> => {
@@ -87,7 +87,7 @@ class SomeType {
     nonNullableListWithNullItemsForbidden: string[]
 }
 
-@paramsObject()
+@argsType()
 class SomeParams {
     @field(GraphQLString) @nonNull()
     someParam:string
@@ -96,7 +96,7 @@ class SomeParams {
 @type()
 class Query {
     @field(SomeType) @nonNull()
-    @params(SomeParams) @resolve(resolveFunction)
+    @args(SomeParams) @resolve(resolveFunction)
     someData:SomeType
 }
 ```
@@ -124,7 +124,7 @@ type Query {
 ## ```@input``` decorator
 
 ```typescript
-import {field, input, nonNull, params, paramsObject, resolve, type} from 'graphql-decorators';
+import {field, input, nonNull, args, argsType, resolve, type} from 'graphql-decorators';
 import {GraphQLString} from "graphql";
 
 const createUser = (_, args:CreateUserParams, ctx):Partial<User> => {
@@ -152,7 +152,7 @@ class NewUserAddressParams {
     city:string;
 }
 
-@paramsObject()
+@argsType()
 class CreateUserParams {
     @field(NewUserParams) @nonNull()
     userParams:NewUserParams;
@@ -187,7 +187,7 @@ class User {
 @type()
 class Mutation {
     @field(User) @nonNull()
-    @params(CreateUserParams) @resolve(createUser)
+    @args(CreateUserParams) @resolve(createUser)
     createUser:User
 }
 ```

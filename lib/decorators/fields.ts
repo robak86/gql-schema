@@ -38,7 +38,7 @@ export const description = (description:string):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {description})
 };
 
-export const params = (argsType:ArgsType):PropertyDecorator => {
+export const args = (argsType:ArgsType):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {args: argsType})
 };
 
