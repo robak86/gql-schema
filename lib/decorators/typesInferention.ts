@@ -33,13 +33,15 @@ export type FieldType =
 
 
 export function inferGraphQLType(klass:FieldType, allowedMetaData:Function[] = []) {
-    if (enumsRegistry.hasEnum(klass)){
+    if (isType(klass)) {
+        return klass;
+    }
+
+    if (enumsRegistry.hasEnum(klass)) {
         return enumsRegistry.getGraphQLEnumType(klass);
     }
 
-    if (isType(klass) || !_.isFunction(klass)) {
-        return klass;
-    } else {
+    if (_.isFunction(klass)) {
         let metadata = getMetadata(klass as any);
         if (allowedMetaData.length > 0) {
             let validType = allowedMetaData.some(metadataClass => metadata instanceof metadataClass);
@@ -50,4 +52,6 @@ export function inferGraphQLType(klass:FieldType, allowedMetaData:Function[] = [
 
         return metadata.toGraphQLType();
     }
+
+    throw new Error(`Cannot infer type for ${JSON.stringify(klass)}`)
 }
