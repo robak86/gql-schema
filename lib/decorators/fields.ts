@@ -1,24 +1,9 @@
 import {FieldConfig, FieldsMetadata} from "../metadata/FieldsMetadata";
-
-import {Type} from "../utils/types";
 import {invariant} from "../utils/core";
 import * as _ from 'lodash';
-import {
-    GraphQLInterfaceType, GraphQLObjectType, GraphQLScalarType, GraphQLUnionType, GraphQLEnumType,
-    GraphQLInputObjectType, GraphQLList, GraphQLNonNull, GraphQLID
-} from "graphql";
+import {GraphQLID} from "graphql";
+import {ArgsType, GraphType} from "./typesInferention";
 
-
-type GraphType =
-    GraphQLScalarType |
-    GraphQLObjectType |
-    GraphQLInterfaceType |
-    GraphQLUnionType |
-    GraphQLEnumType |
-    GraphQLInputObjectType |
-    GraphQLList<any> |
-    GraphQLNonNull<any> | 
-    Type<any>;
 
 function patchField(target, propertyKey, partialConfig:Partial<FieldConfig>) {
     let fieldsMetadata:FieldsMetadata = FieldsMetadata.getOrCreateForClass(target.constructor);
@@ -31,12 +16,12 @@ export const id = ():PropertyDecorator => {
     })
 };
 
-export const field = (type:GraphType):PropertyDecorator => {
+export const field = (type:GraphType|Object):PropertyDecorator => {
     invariant(!!type, `@field decorator called with undefined or null value`);
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {type})
 };
 
-export const fieldLazy = (thunkType:() => GraphType):PropertyDecorator => {
+export const fieldLazy = (thunkType:() => (GraphType|Object)):PropertyDecorator => {
     invariant(_.isFunction(thunkType), `@fieldThunk decorator called with non function param`);
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {thunkType})
 };
@@ -53,7 +38,7 @@ export const description = (description:string):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {description})
 };
 
-export const params = (argsType:GraphType):PropertyDecorator => {
+export const params = (argsType:ArgsType):PropertyDecorator => {
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {args: argsType})
 };
 

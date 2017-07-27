@@ -1,14 +1,13 @@
 import {expect} from 'chai';
-import {GraphQLField, GraphQLObjectType, GraphQLSchema, GraphQLString, printSchema} from "graphql";
-
+import {GraphQLEnumType, GraphQLField, GraphQLObjectType, GraphQLString} from "graphql";
 import {ObjectTypeMetadata} from "../../lib/metadata/ObjectTypeMetadata";
-
 import {createUnion} from "../../lib/factories/createUnion";
-import * as _ from 'lodash';
+import * as _ from 'lodash/fp';
 import {createEnum} from "../../lib/factories/createEnum";
 import {type} from "../../lib/decorators/type";
-import {params, field, resolve} from "../../lib/decorators/fields";
+import {field, params, resolve} from "../../lib";
 import {paramsObject} from "../../lib/index";
+import {decorateEnum} from "../../lib/decorators/enum";
 
 describe("@type", () => {
     describe("@type()", () => {
@@ -122,6 +121,38 @@ describe("@type", () => {
                 let graphQLObjectType = ObjectTypeMetadata.getOrCreateForClass(SomeOtherType).toGraphQLType();
                 let statusField:GraphQLField<any, any> = graphQLObjectType.getFields()['status'];
                 expect(statusField.type).to.eql(StatusType);
+            });
+        });
+
+        describe("ts enum decorated with decorateEnum function", () => {
+            enum Status {
+                started = 'started',
+                stopped = 'stopped'
+            }
+
+            decorateEnum('Status', Status);
+
+            @type()
+            class SomeOtherType {
+                @field(Status)
+                status:Status;
+            }
+
+            it("uses GraphQLEnumType native type", () => {
+                let graphQLObjectType = ObjectTypeMetadata.getOrCreateForClass(SomeOtherType).toGraphQLType();
+                let statusField:GraphQLField<any, any> = graphQLObjectType.getFields()['status'];
+                let type:GraphQLEnumType = statusField.type as any;
+                expect(type).to.be.instanceOf(GraphQLEnumType);
+                expect(type.getValues().map(_.pick(['value', 'name']))).to.eql([
+                    {
+                        name: "started",
+                        value: "started"
+                    },
+                    {
+                        name: "stopped",
+                        value: "stopped"
+                    }
+                ])
             });
         });
 

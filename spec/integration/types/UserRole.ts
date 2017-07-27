@@ -1,5 +1,9 @@
-import {createEnum} from "../../../lib/factories/createEnum";
-import {GraphQLEnumType} from "graphql";
+import {decorateEnum} from "../../../lib";
 
-export type UserRole = 'admin' | 'stuff' | 'guest';
-export const UserRoleType:GraphQLEnumType = createEnum('UserRole', ['admin', 'stuff', 'guest']);
+export enum UserRole {
+    admin = 'admin',
+    stuff = 'stuff',
+    guest = 'guest'
+}
+
+decorateEnum('UserRole', UserRole);

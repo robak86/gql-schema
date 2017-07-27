@@ -1,6 +1,6 @@
 import {input} from "../../../lib/decorators/input";
 import {GraphQLString} from "graphql";
-import {field} from "../../../lib/decorators/fields";
+import {field} from "../../../lib/";
 import {paramsObject} from "../../../lib/decorators/paramsObject";
 
 

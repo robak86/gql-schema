@@ -32,4 +32,8 @@ export class EnumsRegistry {
     hasEnum(enumType:Object):boolean {
         return this.enums.has(enumType);
     }
+
+    clearAll() {
+        this.enums.clear();
+    }
 }

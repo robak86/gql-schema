@@ -1,7 +1,8 @@
-import {list, description, field, fieldLazy, nonNull, listLazy, id, nonNullItems} from "../../lib/decorators/fields";
 import {GraphQLID, GraphQLString} from "graphql";
 import {FieldsMetadata} from "../../lib/metadata/FieldsMetadata";
 import {expect} from 'chai';
+import {id, field, fieldLazy, list, listLazy, description, nonNull, nonNullItems} from '../../lib/';
+import {decorateEnum} from "../../lib/decorators/enum";
 
 describe("fields decorators", () => {
     describe("@id()", () => {
@@ -25,24 +26,55 @@ describe("fields decorators", () => {
     });
 
     describe("@field()", () => {
-        class SomeClass {
-            @field(GraphQLString)
-            someField:string
-        }
+        describe("graphql types", () => {
+            class SomeClass {
+                @field(GraphQLString)
+                someField:string
+            }
 
-        let fieldConfig;
-        beforeEach(() => {
-            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            let fieldConfig;
+            beforeEach(() => {
+                fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            });
+
+            it("sets type for field config", () => {
+                expect(fieldConfig.type).to.eq(GraphQLString);
+            });
+
+            it("uses defaults values", () => {
+                expect(fieldConfig.nonNull).to.eq(false);
+                expect(fieldConfig.array).to.eq(false);
+                expect(fieldConfig.nonNullItem).to.eq(false);
+            });
         });
 
-        it("adds type to property config", () => {
-            expect(fieldConfig.type).to.eq(GraphQLString);
-        });
+        describe("typescript enum type", () => {
+            enum SomeEnum {
+                A = 'A',
+                B = 'B'
+            }
 
-        it("uses defaults values", () => {
-            expect(fieldConfig.nonNull).to.eq(false);
-            expect(fieldConfig.array).to.eq(false);
-            expect(fieldConfig.nonNullItem).to.eq(false);
+            decorateEnum('SomeEnum', SomeEnum);
+
+            class SomeClass {
+                @field(SomeEnum)
+                someField:SomeEnum;
+            }
+
+            let fieldConfig;
+            beforeEach(() => {
+                fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            });
+
+            it("sets type for field config", () => {
+                expect(fieldConfig.type).to.eq(SomeEnum);
+            });
+
+            it("uses defaults values", () => {
+                expect(fieldConfig.nonNull).to.eq(false);
+                expect(fieldConfig.array).to.eq(false);
+                expect(fieldConfig.nonNullItem).to.eq(false);
+            });
         });
     });
 

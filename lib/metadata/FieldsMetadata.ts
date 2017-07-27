@@ -1,26 +1,24 @@
 import 'reflect-metadata';
-import {GraphQLFieldConfig, GraphQLList, GraphQLNonNull, GraphQLType, Thunk} from "graphql";
-
-import {Type} from "../utils/types";
+import {GraphQLFieldConfig, GraphQLList, GraphQLNonNull, Thunk} from "graphql";
 import {metadataGet, metadataGetOrSet} from "./metadataFactories";
 import * as _ from 'lodash';
-import {inferGraphQLType} from "../utils";
 import {invariant, isPresent} from "../utils/core";
 import {ArgumentMapMetadata} from "./ArgumentMapMetadata";
+import {ArgsType, GraphType, inferGraphQLType} from "../decorators/typesInferention";
 
 
 const FIELDS_METADATA_KEY = '__FIELDS_METADATA_KEY';
 
 export interface FieldConfig {
-    type:Type<any> | GraphQLType
-    thunkType:Thunk<Type<any> | GraphQLType>
+    type:GraphType
+    thunkType:Thunk<GraphType>
     nonNull:boolean
     array:boolean
     nonNullItem:boolean
     resolve?:Function
-    description?:string;
-    args?:Type<any> | GraphQLType
-    thunkArgs:Thunk<Type<any> | GraphQLType>
+    description?:string
+    args?:ArgsType
+    thunkArgs:Thunk<GraphType>
 }
 
 function resolveThunk<T>(thunk:Thunk<T>):T {

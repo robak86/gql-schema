@@ -2,7 +2,8 @@ import {input} from "../../lib/decorators/input";
 import {InputObjectTypeMetadata} from "../../lib/metadata/InputObjectTypeMetadata";
 import {expect} from 'chai';
 import {GraphQLInputField, GraphQLObjectType, GraphQLString} from "graphql";
-import {field} from "../../lib/decorators/fields";
+import {field} from "../../lib/index";
+
 
 describe("@input", () => {
     describe("@input()", () => {

@@ -1,6 +1,6 @@
 import {type} from "../../../lib/decorators/type";
 import {GraphQLString} from "graphql";
-import {list, field, nonNull, params, resolve, nonNullItems} from "../../../lib/decorators/fields";
+import {list, field, nonNull, params, resolve, nonNullItems} from "../../../lib/";
 import {User} from "./User";
 import {UsersArguments} from "./UserSearch";
 import {resolveFakeSearch, resolveUsers} from "../resolvers/queries";
