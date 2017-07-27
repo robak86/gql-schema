@@ -16,12 +16,12 @@ export const id = ():PropertyDecorator => {
     })
 };
 
-export const field = (type:FieldType|Object):PropertyDecorator => {
+export const field = (type:FieldType):PropertyDecorator => {
     invariant(!!type, `@field decorator called with undefined or null value`);
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {type})
 };
 
-export const fieldLazy = (thunkType:() => (FieldType|Object)):PropertyDecorator => {
+export const fieldLazy = (thunkType:() => (FieldType)):PropertyDecorator => {
     invariant(_.isFunction(thunkType), `@fieldThunk decorator called with non function param`);
     return (target:Object, propertyKey:string) => patchField(target, propertyKey, {thunkType})
 };

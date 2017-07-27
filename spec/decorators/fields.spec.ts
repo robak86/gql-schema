@@ -26,55 +26,24 @@ describe("fields decorators", () => {
     });
 
     describe("@field()", () => {
-        describe("graphql types", () => {
-            class SomeClass {
-                @field(GraphQLString)
-                someField:string
-            }
+        class SomeClass {
+            @field(GraphQLString)
+            someField:string
+        }
 
-            let fieldConfig;
-            beforeEach(() => {
-                fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
-            });
-
-            it("sets type for field config", () => {
-                expect(fieldConfig.type).to.eq(GraphQLString);
-            });
-
-            it("uses defaults values", () => {
-                expect(fieldConfig.nonNull).to.eq(false);
-                expect(fieldConfig.array).to.eq(false);
-                expect(fieldConfig.nonNullItem).to.eq(false);
-            });
+        let fieldConfig;
+        beforeEach(() => {
+            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
         });
 
-        describe("typescript enum type", () => {
-            enum SomeEnum {
-                A = 'A',
-                B = 'B'
-            }
+        it("sets type for field config", () => {
+            expect(fieldConfig.type).to.eq(GraphQLString);
+        });
 
-            decorateEnum('SomeEnum', SomeEnum);
-
-            class SomeClass {
-                @field(SomeEnum)
-                someField:SomeEnum;
-            }
-
-            let fieldConfig;
-            beforeEach(() => {
-                fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
-            });
-
-            it("sets type for field config", () => {
-                expect(fieldConfig.type).to.eq(SomeEnum);
-            });
-
-            it("uses defaults values", () => {
-                expect(fieldConfig.nonNull).to.eq(false);
-                expect(fieldConfig.array).to.eq(false);
-                expect(fieldConfig.nonNullItem).to.eq(false);
-            });
+        it("uses defaults values", () => {
+            expect(fieldConfig.nonNull).to.eq(false);
+            expect(fieldConfig.array).to.eq(false);
+            expect(fieldConfig.nonNullItem).to.eq(false);
         });
     });
 

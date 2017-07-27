@@ -129,7 +129,6 @@ describe("@type", () => {
                 started = 'started',
                 stopped = 'stopped'
             }
-
             decorateEnum('Status', Status);
 
             @type()
