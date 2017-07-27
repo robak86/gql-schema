@@ -1,7 +1,8 @@
-import {list, description, field, fieldLazy, nonNull, listLazy, id, nonNullItems} from "../../lib/decorators/fields";
 import {GraphQLID, GraphQLString} from "graphql";
 import {FieldsMetadata} from "../../lib/metadata/FieldsMetadata";
 import {expect} from 'chai';
+import {id, field, fieldLazy, list, listLazy, description, nonNull, nonNullItems} from '../../lib/';
+import {decorateEnum} from "../../lib/decorators/enum";
 
 describe("fields decorators", () => {
     describe("@id()", () => {
@@ -35,7 +36,7 @@ describe("fields decorators", () => {
             fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
         });
 
-        it("adds type to property config", () => {
+        it("sets type for field config", () => {
             expect(fieldConfig.type).to.eq(GraphQLString);
         });
 

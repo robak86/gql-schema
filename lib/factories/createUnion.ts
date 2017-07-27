@@ -1,7 +1,8 @@
 import {GraphQLObjectType, GraphQLUnionType, Thunk} from "graphql";
-import {inferGraphQLType} from "../utils";
+
 import {ObjectTypeMetadata} from "../metadata/ObjectTypeMetadata";
 import * as _ from 'lodash';
+import {inferGraphQLType} from "../decorators/typesInferention";
 
 export function createUnion(name:string, types:Thunk<Array<GraphQLObjectType|Function>>, resolveType):GraphQLUnionType {
     return new GraphQLUnionType({
@@ -12,5 +13,3 @@ export function createUnion(name:string, types:Thunk<Array<GraphQLObjectType|Fun
         }
     });
 }
-
-

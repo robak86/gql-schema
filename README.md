@@ -55,7 +55,6 @@ async function main() {
 main();
 ```
 
-
 ## ```@type``` decorator
  
 ```typescript
@@ -221,5 +220,45 @@ type Address {
 type Mutation {
     createUser(userParams: NewUserParams, addressParams: NewUserAddressParams):User!
 }
+```
 
+## Using typescript enums
+
+```typescript 
+import {decorateEnum, type, field, nonNull} from 'graphql-decorators';
+
+enum JobStatus {
+    done = 'ok',
+    failed = 'error'
+}
+
+decorateEnum('Status', JobStatus); // it makes JobStatus acceptable by @field decorator
+
+@type()
+class BackgroundJob {
+    @field(JobStatus) @nonNull()
+    status:string;
+}
+```
+
+Given annotated classes will produce following schema definition. 
+
+```graphql schema
+type BackgroundJob{
+    status: Status!
+}
+
+enum Status {
+    done
+    failed
+}
+```
+
+```GraphQLEnumType``` for JobStatus will have the same mapping as ts enum
+
+```typescript
+[
+    {name: 'done', value: 'ok'},
+    {name: 'failed', value: 'error'},
+]
 ```

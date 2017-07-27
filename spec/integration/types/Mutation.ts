@@ -1,6 +1,7 @@
 import {type} from "../../../lib/decorators/type";
-import {field} from "../../../lib/decorators/fields";
+
 import {GraphQLString} from "graphql";
+import {field} from "../../../lib/index";
 
 @type()
 export class Mutation {

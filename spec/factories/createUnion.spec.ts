@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import {ObjectTypeMetadata} from "../../lib/metadata/ObjectTypeMetadata";
 import {expect} from 'chai';
 import {GraphQLString} from "graphql";
-import {field} from "../../lib/decorators/fields";
+import {field} from "../../lib";
 
 describe(".createUnion", () => {
     let SomeUnionTypeDefinition;
