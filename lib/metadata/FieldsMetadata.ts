@@ -4,21 +4,21 @@ import {metadataGet, metadataGetOrSet} from "./metadataFactories";
 import * as _ from 'lodash';
 import {invariant, isPresent} from "../utils/core";
 import {ArgumentMapMetadata} from "./ArgumentMapMetadata";
-import {ArgsType, GraphType, inferGraphQLType} from "../decorators/typesInferention";
+import {ArgsType, FieldType, inferGraphQLType} from "../decorators/typesInferention";
 
 
 const FIELDS_METADATA_KEY = '__FIELDS_METADATA_KEY';
 
 export interface FieldConfig {
-    type:GraphType
-    thunkType:Thunk<GraphType>
+    type:FieldType
+    thunkType:Thunk<FieldType>
     nonNull:boolean
     array:boolean
     nonNullItem:boolean
     resolve?:Function
     description?:string
     args?:ArgsType
-    thunkArgs:Thunk<GraphType>
+    thunkArgs:Thunk<FieldType>
 }
 
 function resolveThunk<T>(thunk:Thunk<T>):T {

@@ -19,8 +19,7 @@ export type ArgsType =
     GraphQLInputObjectType |
     Type<any>
 
-//TODO: renamt to FieldType
-export type GraphType =
+export type FieldType =
     GraphQLScalarType |
     GraphQLObjectType |
     GraphQLInterfaceType |
@@ -33,7 +32,7 @@ export type GraphType =
     Object;
 
 
-export function inferGraphQLType(klass:GraphType, allowedMetaData:Function[] = []) {
+export function inferGraphQLType(klass:FieldType, allowedMetaData:Function[] = []) {
     if (enumsRegistry.hasEnum(klass)){
         return enumsRegistry.getGraphQLEnumType(klass);
     }
