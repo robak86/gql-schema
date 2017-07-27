@@ -13,5 +13,3 @@ export function createUnion(name:string, types:Thunk<Array<GraphQLObjectType|Fun
         }
     });
 }
-
-
