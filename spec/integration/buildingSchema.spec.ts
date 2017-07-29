@@ -34,6 +34,9 @@ function createSchemaFromDefinition():GraphQLSchema {
                 someQuery: String
                 users(params: UserSearchParams): [User!]!
                 search: [SearchResult!]!
+                searchAssets: [Asset!]!
+                images: [Image!]!
+                audioAssets: [AudioAsset!]!
             }
             
             type Mutation {
@@ -48,6 +51,27 @@ function createSchemaFromDefinition():GraphQLSchema {
                 admin 
                 stuff 
                 guest
+            }
+            
+            interface Asset {
+                 id: ID!
+                 size: Int!
+                 mimeType: String!
+            }
+            
+            type Image implements Asset {
+                 id: ID!
+                 size: Int!
+                 mimeType: String!
+                 width: Int
+                 height: Int
+            }
+            
+            type AudioAsset implements Asset {
+                id: ID!
+                size: Int!
+                mimeType: String!
+                length: Int
             }
             
             union SearchResult = User | Company
@@ -96,6 +120,24 @@ describe("building schema", () => {
     describe("enum UserSearchAddressParams", () => {
         it("generates proper type", () => {
             expectTypesEqual('UserSearchAddressParams');
+        });
+    });
+
+    describe("interface Asset", () => {
+        it("generates proper type", () => {
+            expectTypesEqual('Asset');
+        });
+    });
+
+    describe("interface Asset", () => {
+        it("generates proper type", () => {
+            expectTypesEqual('Image');
+        });
+    });
+
+    describe("interface Asset", () => {
+        it("generates proper type", () => {
+            expectTypesEqual('AudioAsset');
         });
     });
 });

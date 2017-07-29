@@ -5,6 +5,10 @@ import {User} from "./User";
 import {UsersArguments} from "./UserSearch";
 import {resolveFakeSearch, resolveUsers} from "../resolvers/queries";
 import {SearchResult, SearchResultType} from "./SearchResult";
+import {Asset} from "./Asset";
+import {Image} from "./Image";
+import {AudioAsset} from "./AudioAsset";
+import {noop} from "../../../lib/utils/core";
 
 
 @type()
@@ -19,4 +23,17 @@ export class Query {
     @list(SearchResultType) @nonNull() @nonNullItems()
     @resolve(resolveFakeSearch)
     search:SearchResult;
+
+
+    @list(Asset) @nonNull() @nonNullItems()
+    @resolve(noop)
+    searchAssets:Asset;
+
+    @list(Image) @nonNull() @nonNullItems()
+    @resolve(noop)
+    images:Image;
+
+    @list(AudioAsset) @nonNull() @nonNullItems()
+    @resolve(noop)
+    audioAssets:AudioAsset;
 }

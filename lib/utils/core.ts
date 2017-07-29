@@ -24,3 +24,5 @@ export function invariant(condition:boolean, message:string) {
         throw new Error(message);
     }
 }
+
+export function noop() {}
