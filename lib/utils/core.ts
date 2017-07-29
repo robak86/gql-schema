@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {Maybe} from "./types";
 
 export function isPresent<T>(val:T | void | null | undefined):val is T {
-    return !!val
+    return !!val || (val as any) === 0;
 }
 
 export function someOrThrow<T>(fn:(() => Maybe<T>) | Maybe<T>, errorMsg:string):T | never {
