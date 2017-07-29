@@ -7,6 +7,10 @@ Yet another experimental library for defining graphql schemas using decorators. 
 
 ## Getting started
 
+```bash
+npm install graphql-decorators --save
+```
+
 This library requires node.js 4.4.0 or higher, typescript 2.4.x and uses es7 decorators. Make sure your tsconfig.json has ```experimentalDecorators``` set to true ```true``` 
 
 ```json
