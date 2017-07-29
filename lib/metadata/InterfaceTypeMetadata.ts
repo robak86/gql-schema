@@ -1,25 +1,31 @@
 import 'reflect-metadata';
-import {GraphQLInterfaceType, GraphQLIsTypeOfFn, GraphQLObjectType, Thunk} from "graphql";
+
 import {GRAPHQL_METADATA_KEY, IGraphQLMetadata} from "../abstract/IGraphQLMetadata";
 import {isPresent, someOrThrow} from "../utils/core";
-import {Type} from "../utils/types";
 import {metadataGet, metadataGetOrSet} from "./metadataFactories";
 import * as _ from 'lodash';
 import {FieldsMetadata} from "./FieldsMetadata";
-import {resolveThunk} from "../utils/graphql";
+import {GraphQLInterfaceType, GraphQLResolveInfo, GraphQLTypeResolver} from "graphql";
 import {inferGraphQLType} from "../decorators/typesInferention";
-import {InterfaceTypeMetadata} from "./InterfaceTypeMetadata";
+import {Type} from "../utils/types";
+
+
+export type TypeResolverForAnnotatedClass<TSource, TContext> = (
+    value: TSource,
+    context: TContext,
+    info: GraphQLResolveInfo
+) => Type<any>
+
 
 export interface TypeConfig<TSource, TContext> {
     name?:string;
-    interfaces?:Thunk<Array<GraphQLInterfaceType | Type<any>>>;
-    isTypeOf?:GraphQLIsTypeOfFn<TSource, TContext>; //#TODO: autopopulate with instanceof
-    description?:string
+    description?:string;
+    resolveType?:GraphQLTypeResolver<any, any> | TypeResolverForAnnotatedClass<any, any>;
 }
 
-export class ObjectTypeMetadata implements IGraphQLMetadata {
-    static getForClass = metadataGet<ObjectTypeMetadata>(GRAPHQL_METADATA_KEY);
-    static getOrCreateForClass = metadataGetOrSet(GRAPHQL_METADATA_KEY, ObjectTypeMetadata);
+export class InterfaceTypeMetadata implements IGraphQLMetadata {
+    static getForClass = metadataGet<InterfaceTypeMetadata>(GRAPHQL_METADATA_KEY);
+    static getOrCreateForClass = metadataGetOrSet(GRAPHQL_METADATA_KEY, InterfaceTypeMetadata);
 
     private _config:TypeConfig<any, any>;
 
@@ -32,16 +38,17 @@ export class ObjectTypeMetadata implements IGraphQLMetadata {
         this._config = {...this._config, ...config};
     }
 
-    toGraphQLType():GraphQLObjectType {
+    toGraphQLType():GraphQLInterfaceType {
         let fieldsMetadata = someOrThrow(FieldsMetadata.getForClass(this.klass), `Missing fields definition for ${this.klass.name}`);
 
-        let interfaces = isPresent(this._config.interfaces) ?
-            resolveThunk(this._config.interfaces).map(type => inferGraphQLType(type, [InterfaceTypeMetadata])) : null;
+        let resolveType = isPresent(this._config.resolveType) ?
+            (value, context, info) => inferGraphQLType(this._config.resolveType(value, context, info)) :
+            null;
 
-        return new GraphQLObjectType({
+        return new GraphQLInterfaceType({
             name: this._config.name,
-            interfaces,
             description: this._config.description,
+            resolveType,
             fields: () => fieldsMetadata.getFields()
         })
     }

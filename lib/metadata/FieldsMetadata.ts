@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-import {GraphQLFieldConfig, GraphQLList, GraphQLNonNull, Thunk} from "graphql";
+import {GraphQLFieldConfig, GraphQLFieldConfigMap, GraphQLList, GraphQLNonNull, Thunk} from "graphql";
 import {metadataGet, metadataGetOrSet} from "./metadataFactories";
 import * as _ from 'lodash';
 import {invariant, isPresent} from "../utils/core";
 import {ArgumentMapMetadata} from "./ArgumentMapMetadata";
 import {ArgsType, FieldType, inferGraphQLType} from "../decorators/typesInferention";
+import {resolveThunk} from "../utils/graphql";
 
 
 const FIELDS_METADATA_KEY = '__FIELDS_METADATA_KEY';
@@ -19,11 +20,9 @@ export interface FieldConfig {
     description?:string
     args?:ArgsType
     thunkArgs:Thunk<FieldType>
+    deprecationReason?:string;
 }
 
-function resolveThunk<T>(thunk:Thunk<T>):T {
-    return typeof thunk === 'function' ? thunk() : thunk;
-}
 
 function convertFieldConfigToGraphQL(config:Partial<FieldConfig>):GraphQLFieldConfig<any, any> {
     let type = inferGraphQLType(config.type || resolveThunk(config.thunkType));
@@ -43,7 +42,8 @@ function convertFieldConfigToGraphQL(config:Partial<FieldConfig>):GraphQLFieldCo
         type = new GraphQLNonNull(type);
     }
 
-    return {..._.cloneDeep(config), type, args} as GraphQLFieldConfig<any, any>;
+    let {resolve, deprecationReason, description} = _.cloneDeep(config);
+    return {resolve, deprecationReason, description, type, args} as GraphQLFieldConfig<any, any>;
 }
 
 export class FieldsMetadata {
@@ -52,7 +52,7 @@ export class FieldsMetadata {
 
     private fields:{ [fieldName:string]:Partial<FieldConfig> } = {};
 
-    constructor() {}
+    constructor(private klass) {}
 
     getField(fieldName:string):Partial<FieldConfig> {
         return this.fields[fieldName];
@@ -65,10 +65,10 @@ export class FieldsMetadata {
         }
     }
 
-    getFields() {
+    getFields():GraphQLFieldConfigMap<any, any> {
+        invariant(Object.keys(this.fields).length > 0, `Missing fields definition for ${this.klass.name} class`);
         return _.mapValues(this.fields, convertFieldConfigToGraphQL);
     }
-
 
     private existingPropsOrDefaults(fieldName:string) {
         return this.fields[fieldName] || {
