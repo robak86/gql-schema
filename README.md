@@ -262,3 +262,58 @@ enum Status {
     {name: 'failed', value: 'error'},
 ]
 ```
+
+## Defining union types
+
+```typescript 
+import {type, field} from 'graphql-decorators'
+import {GraphQLString, GraphQLInt} from "graphql";
+
+@type()
+class Circle {
+    @field(GraphQLInt) @nonNull()
+    radius:number;
+}
+
+@type()
+class Square {
+    @field(GraphQLInt) @nonNull()
+    length:string;
+}
+
+const Shape = createUnion('Shape', [Circle, Square], (obj) => {
+     if (_.isNumber(obj.radius)) {
+         return Circle
+     }
+ 
+     if (_.isNumber(obj.length)) {
+         return Square
+     }
+ 
+     throw new Error(`Unknown shape type`);
+}));
+
+@type()
+class SomeType {
+    @field(Shape) @nonNull()
+    shape: Circle | Square
+}
+```
+
+Given code will produce following graphql schema definition 
+
+```graphql schema
+type Circle {
+    radius: Int!
+}
+
+type Square {
+    length: Int!
+}
+
+union Shape = Circle | Square
+
+type Shape {
+    shape:Shape!
+}
+```
