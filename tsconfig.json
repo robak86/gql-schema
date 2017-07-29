@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "sourceMap": true,
+    "sourceMap": false,
     "target": "es5",
     "lib": ["es6", "dom"],
     "types": ["reflect-metadata", "mocha",  "chai", "graphql"],
@@ -10,12 +10,10 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declaration": true,
-    "typeRoots" : [
-      "./node_modules/@types"
-    ]
+    "declaration": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }

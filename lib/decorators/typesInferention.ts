@@ -10,7 +10,7 @@ import {
     GraphQLUnionType,
     isType
 } from "graphql";
-import {getMetadata} from "../utils";
+import {getMetadata} from "../utils/metadata";
 import * as _ from 'lodash';
 import {enumsRegistry} from "../registry/typesRegistry";
 

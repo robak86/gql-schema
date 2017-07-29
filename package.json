@@ -1,17 +1,16 @@
 {
   "name": "graphql-decorators",
   "version": "0.0.1",
-  "description": "Decorators for defining graphql schemas",
+  "description": "Yet another experimental library for defining graphql schemas using decorators.",
   "repository": "https://github.com/robak86/graphql-decorators",
   "main": "lib/index.js",
   "scripts": {
-    "mocha": "mocha",
     "test": "mocha --require dist/spec/SpecHelper.js dist/spec/**/*.spec.js",
     "build:clean": "rm -rf ./dist && mkdir -p dist/lib",
     "build:copy": "cp package.json ./dist/lib/ && cp README.md ./dist/lib/",
     "build:compile": "tsc",
     "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile",
-    "build:watch": "npm run build:clean && npm run build:copy && tsc --watch",
+    "build:watch": "npm run build:clean && npm run build:copy && tsc --watch --sourceMap",
     "build:coverage": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js | coveralls"
   },
   "author": "Tomasz Robaczewski",

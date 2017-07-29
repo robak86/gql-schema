@@ -3,11 +3,11 @@
 [![Build Status](https://travis-ci.org/robak86/graphql-decorators.svg?branch=master)](https://travis-ci.org/robak86/graphql-decorators)
 [![Coverage Status](https://coveralls.io/repos/github/robak86/graphql-decorators/badge.svg?branch=master)](https://coveralls.io/github/robak86/graphql-decorators?branch=master)
 
-Yet another experimental library for defining graphql schemas using decorators. Not already published - alpha status. 
+Yet another experimental library for defining graphql schemas using decorators. Alpha version - use at your own risk.
 
 ## Getting started
 
-This library requires node.js 4.4.0 or later and uses es7 decorators. Make sure your tsconfig.json has ```experimentalDecorators``` set to true ```true``` 
+This library requires node.js 4.4.0 or higher, typescript 2.4.x and uses es7 decorators. Make sure your tsconfig.json has ```experimentalDecorators``` set to true ```true``` 
 
 ```json
 {
@@ -17,14 +17,10 @@ This library requires node.js 4.4.0 or later and uses es7 decorators. Make sure 
         "noImplicitAny": false,
         "sourceMap": false,
         "moduleResolution": "node",
-        "experimentalDecorators": true,
-    },
-    "exclude": [
-        "node_modules"
-    ]
+        "experimentalDecorators": true
+    }
 }
 ```
-
 
 ## Defining Schema
 
