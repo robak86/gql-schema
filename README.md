@@ -1,14 +1,14 @@
-# graphql-decorators
+# GraphQL Schema Decorators
 
-[![Build Status](https://travis-ci.org/robak86/graphql-decorators.svg?branch=master)](https://travis-ci.org/robak86/graphql-decorators)
-[![Coverage Status](https://coveralls.io/repos/github/robak86/graphql-decorators/badge.svg?branch=master)](https://coveralls.io/github/robak86/graphql-decorators?branch=master)
+[![Build Status](https://travis-ci.org/robak86/gql-schema.svg?branch=master)](https://travis-ci.org/robak86/gql-schema)
+[![Coverage Status](https://coveralls.io/repos/github/robak86/gql-schema/badge.svg?branch=master)](https://coveralls.io/github/robak86/gql-schema?branch=master)
 
 Yet another experimental library for defining graphql schemas using decorators. Alpha version - use at your own risk.
 
 ## Getting started
 
 ```bash
-npm install graphql-decorators --save
+npm install gql-schema --save
 ```
 
 This library requires node.js 4.4.0 or higher, typescript 2.4.x and uses es7 decorators. Make sure your tsconfig.json has ```experimentalDecorators``` set to true ```true``` 
@@ -29,7 +29,7 @@ This library requires node.js 4.4.0 or higher, typescript 2.4.x and uses es7 dec
 ## Defining Schema
 
 ```typescript
-import {type, field, createSchema } from 'graphql-decorators';
+import {type, field, createSchema } from 'gql-schema';
 import {GraphQLString, GraphQLSchema, graphql} from "graphql";
 
 @type()
@@ -58,7 +58,7 @@ main();
 ## ```@type``` decorator
  
 ```typescript
-import {type, field, list, nonNull, nonNullItems, resolve, description, id, argsType, args} from 'graphql-decorators';
+import {type, field, list, nonNull, nonNullItems, resolve, description, id, argsType, args} from 'gql-schema';
 import {GraphQLString, GraphQLInt} from "graphql";
 
 const resolveFunction = (_, args:SomeParams, ctx):Partial<SomeType> => {
@@ -124,7 +124,7 @@ type Query {
 ## ```@input``` decorator
 
 ```typescript
-import {field, input, nonNull, args, argsType, resolve, type} from 'graphql-decorators';
+import {field, input, nonNull, args, argsType, resolve, type} from 'gql-schema';
 import {GraphQLString} from "graphql";
 
 const createUser = (_, args:CreateUserParams, ctx):Partial<User> => {
@@ -225,7 +225,7 @@ type Mutation {
 ## Using typescript enums
 
 ```typescript 
-import {decorateEnum, type, field, nonNull} from 'graphql-decorators';
+import {decorateEnum, type, field, nonNull} from 'gql-schema';
 
 enum JobStatus {
     done = 'ok',
@@ -266,7 +266,7 @@ enum Status {
 ## Defining union types
 
 ```typescript 
-import {createUnion, field, nonNull, type} from "graphql-decorators";
+import {createUnion, field, nonNull, type} from "gql-schema";
 import {GraphQLInt} from "graphql";
 
 @type()
@@ -321,7 +321,7 @@ type Shape {
 ## @interfaceType
 
 ```typescript
-import {field, id, interfaceType, nonNull, type} from "graphql-decorators";
+import {field, id, interfaceType, nonNull, type} from "gql-schema";
 import {GraphQLInt, GraphQLString} from "graphql";
 
 @interfaceType({
