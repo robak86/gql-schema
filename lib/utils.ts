@@ -1,6 +1,4 @@
 import {GRAPHQL_METADATA_KEY, IGraphQLMetadata} from "./abstract/IGraphQLMetadata";
-import {GraphQLType, isType} from "graphql";
-import * as _ from 'lodash';
 import {Type} from "./utils/types";
 import {someOrThrow} from "./utils/core";
 
