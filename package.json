@@ -1,6 +1,6 @@
 {
   "name": "gql-schema",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Yet another experimental library for defining graphql schemas using decorators.",
   "repository": "https://github.com/robak86/gql-schema",
   "main": "lib/index.js",
