@@ -11,7 +11,7 @@ export class ArgumentMapMetadata implements IGraphQLMetadata {
     constructor(private klass) {}
 
     toGraphQLType():GraphQLFieldConfigArgumentMap {
-        let fieldsMetadata = someOrThrow(FieldsMetadata.getForClass(this.klass), `Missing fields definition for ${this.klass.name}`);
-        return fieldsMetadata.getFields() as GraphQLFieldConfigArgumentMap;
+        let fieldsMetadata:FieldsMetadata = someOrThrow(FieldsMetadata.getForClass(this.klass), `Missing fields definition for ${this.klass.name}`);
+        return fieldsMetadata.getFields() as any;
     }
 }
