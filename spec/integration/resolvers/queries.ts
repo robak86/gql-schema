@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 
 export function resolveUsers(obj, args, context):UserEntity[] {
-    let firstNameFilter = _.get<string>(args, ['params', 'firstName']);
+    let firstNameFilter = _.get<string>(args, ['params', 'firstName'], undefined);
     if (firstNameFilter) {
         return getUserByFirstName(firstNameFilter);
     } else {

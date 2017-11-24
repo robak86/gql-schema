@@ -1,36 +1,17 @@
 import {Type} from "../utils/types";
-import {
-    GraphQLEnumType,
-    GraphQLInputObjectType,
-    GraphQLInterfaceType,
-    GraphQLList,
-    GraphQLNonNull,
-    GraphQLObjectType,
-    GraphQLScalarType,
-    GraphQLUnionType,
-    isType
-} from "graphql";
+import {GraphQLInputObjectType, GraphQLType, isType} from "graphql";
 import {getMetadata} from "../utils/metadata";
 import * as _ from 'lodash';
 import {enumsRegistry} from "../registry/typesRegistry";
-
 
 export type ArgsType =
     GraphQLInputObjectType |
     Type<any>
 
 export type FieldType =
-    GraphQLScalarType |
-    GraphQLObjectType |
-    GraphQLInterfaceType |
-    GraphQLUnionType |
-    GraphQLEnumType |
-    GraphQLInputObjectType |
-    GraphQLList<any> |
-    GraphQLNonNull<any> |
+    GraphQLType |
     Type<any> |
     Object;
-
 
 export function inferGraphQLType(klass:FieldType, allowedMetaData:Function[] = []) {
     if (isType(klass)) {
