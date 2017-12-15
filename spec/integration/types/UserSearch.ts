@@ -1,7 +1,5 @@
-import {input} from "../../../lib/decorators/input";
+import {input, field} from "../../../lib";
 import {GraphQLString} from "graphql";
-import {field} from "../../../lib/";
-import {argsType} from "../../../lib/decorators/argsType";
 
 
 @input({description: `User search address params`})
@@ -19,7 +17,7 @@ export class UserSearchParams {
     address:UserSearchAddressParams
 }
 
-@argsType()
+@input()
 export class UsersArguments {
     @field(UserSearchParams)
     params:UserSearchParams

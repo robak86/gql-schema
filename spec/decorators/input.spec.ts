@@ -1,8 +1,8 @@
-import {input} from "../../lib/decorators/input";
-import {InputObjectTypeMetadata} from "../../lib/metadata/InputObjectTypeMetadata";
 import {expect} from 'chai';
+import {input} from "../../lib";
 import {GraphQLInputField, GraphQLObjectType, GraphQLString} from "graphql";
-import {field} from "../../lib/index";
+import {field} from "../../lib";
+import {ParamsMetadata} from "../../lib/types-metadata/ParamsMetadata";
 
 
 describe("@input", () => {
@@ -13,15 +13,15 @@ describe("@input", () => {
         }
 
         it("attaches metadata object", () => {
-            expect(InputObjectTypeMetadata.getForClass(SomeInputParams)).to.be.instanceof(InputObjectTypeMetadata)
+            expect(ParamsMetadata.getForClass(SomeInputParams)).to.be.instanceof(ParamsMetadata)
         });
 
         it("sets default name using class name", () => {
-            expect(InputObjectTypeMetadata.getForClass(SomeInputParams).toGraphQLType().name).to.eq('SomeInputParams');
+            expect(ParamsMetadata.getForClass(SomeInputParams).toGraphQLInputObjectType().name).to.eq('SomeInputParams');
         });
 
         it("sets description property", () => {
-            expect(InputObjectTypeMetadata.getForClass(SomeInputParams).toGraphQLType().description).to.eq('Some description');
+            expect(ParamsMetadata.getForClass(SomeInputParams).toGraphQLInputObjectType().description).to.eq('Some description');
         });
     });
 
@@ -35,7 +35,7 @@ describe("@input", () => {
 
             describe("type", () => {
                 it("properly passes native type", () => {
-                    let graphQLObjectType = InputObjectTypeMetadata.getOrCreateForClass(SomeInputParams).toGraphQLType();
+                    let graphQLObjectType = ParamsMetadata.getOrCreateForClass(SomeInputParams).toGraphQLInputObjectType();
                     let someFieldField:GraphQLInputField = graphQLObjectType.getFields()['someField'];
 
                     expect(someFieldField.name).to.eq('someField');
@@ -58,11 +58,11 @@ describe("@input", () => {
             }
 
             it("it accepts annotated class as type parameter", () => {
-                let graphQLObjectType = InputObjectTypeMetadata.getOrCreateForClass(NewUserParams).toGraphQLType();
+                let graphQLObjectType = ParamsMetadata.getOrCreateForClass(NewUserParams).toGraphQLInputObjectType();
                 let someFieldField:GraphQLInputField = graphQLObjectType.getFields()['address'];
                 let someFieldGraphQLObjectType:GraphQLObjectType = someFieldField.type as any;
 
-                expect(someFieldGraphQLObjectType).to.eql(InputObjectTypeMetadata.getForClass(NewUserAddressParams).toGraphQLType());
+                expect(someFieldGraphQLObjectType).to.eql(ParamsMetadata.getForClass(NewUserAddressParams).toGraphQLInputObjectType());
             });
         });
     });

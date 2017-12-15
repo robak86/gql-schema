@@ -1,6 +1,6 @@
 import {User} from "./User";
 import {Company} from "./Company";
-import {createUnion} from "../../../lib/factories/createUnion";
+import {createUnion} from "../../../lib";
 import {GraphQLUnionType} from "graphql";
 
 

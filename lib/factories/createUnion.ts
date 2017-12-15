@@ -1,15 +1,13 @@
 import {GraphQLObjectType, GraphQLUnionType, Thunk} from "graphql";
-
-import {ObjectTypeMetadata} from "../metadata/ObjectTypeMetadata";
 import * as _ from 'lodash';
-import {inferGraphQLType} from "../decorators/typesInferention";
+import {TypeProxy} from "../types-conversion/TypeProxy";
 
-export function createUnion(name:string, types:Thunk<Array<GraphQLObjectType|Function>>, resolveType):GraphQLUnionType {
+
+//TODO: rename to - unionType
+export function createUnion(name:string, types:Thunk<Array<GraphQLObjectType | Function>>, resolveType):GraphQLUnionType {
     return new GraphQLUnionType({
         name,
-        types: _.castArray(types).map(type => inferGraphQLType(type as any, [ObjectTypeMetadata])),
-        resolveType: (value, context) => {
-            return inferGraphQLType(resolveType(value,context));
-        }
+        types: _.castArray(types).map(type => TypeProxy.inferType(type)) as any,        //TODO: fix types
+        resolveType: (value, context) => TypeProxy.inferType(resolveType(value, context)) as any  //TODO: fix types
     });
 }

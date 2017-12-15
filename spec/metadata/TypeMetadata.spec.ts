@@ -1,42 +1,42 @@
 import {noop} from "../../lib/utils/core";
-import {ObjectTypeMetadata} from "../../lib/metadata/ObjectTypeMetadata";
+
 import {expect} from 'chai';
 import {GraphQLInterfaceType, GraphQLObjectType, GraphQLString} from "graphql";
-import {FieldsMetadata} from "../../lib/metadata/FieldsMetadata";
-import {interfaceType} from "../../lib/decorators/interface";
-import {field} from "../../lib/decorators/fields";
-import {InterfaceTypeMetadata} from "../../lib/metadata/InterfaceTypeMetadata";
+import {FieldsMetadata} from "../../lib/fields-metadata/FieldsMetadata";
+import {field, interfaceType} from "../../lib";
+import {InterfaceTypeMetadata} from "../../lib/types-metadata/InterfaceTypeMetadata";
+import {TypeMetadata} from "../../lib/types-metadata/TypeMetadata";
 
-describe("ObjectTypeMetadata", () => {
+describe("TypeMetadata", () => {
     describe("static getForClass", noop);
     describe("static getOrCreateForClass", noop);
 
     describe(".toGraphQLType", () => {
         let SomeClass,
-            someClassMetadata:ObjectTypeMetadata,
+            someClassMetadata:TypeMetadata,
             someClassFieldsMetadata:FieldsMetadata;
 
         beforeEach(() => {
             SomeClass = class {};
-            someClassMetadata = ObjectTypeMetadata.getOrCreateForClass(SomeClass);
+            someClassMetadata = TypeMetadata.getOrCreateForClass(SomeClass);
             someClassMetadata.setConfig({name: 'SomeClass'});
 
             someClassFieldsMetadata = FieldsMetadata.getOrCreateForClass(SomeClass);
-            someClassFieldsMetadata.patchConfig('requiredDummyField', {type: GraphQLString});
+            someClassFieldsMetadata.getField('requiredDummyField').setType(GraphQLString);
         });
 
         it("returns GraphQLObjectType", () => {
-            expect(someClassMetadata.toGraphQLType()).to.be.instanceOf(GraphQLObjectType);
+            expect(someClassMetadata.toGraphQLObjectType()).to.be.instanceOf(GraphQLObjectType);
         });
 
         it("it pass name property to GraphQLObjectType instance", () => {
             someClassMetadata.setConfig({name: 'SomeName'});
-            expect(someClassMetadata.toGraphQLType().name).to.eq('SomeName');
+            expect(someClassMetadata.toGraphQLObjectType().name).to.eq('SomeName');
         });
 
         it("it pass description property to GraphQLObjectType instance", () => {
             someClassMetadata.setConfig({description: 'Some description'});
-            expect(someClassMetadata.toGraphQLType().description).to.eq('Some description');
+            expect(someClassMetadata.toGraphQLObjectType().description).to.eq('Some description');
         });
 
         it("pass interfaces property to GraphQLObjectType instance", () => {
@@ -51,7 +51,7 @@ describe("ObjectTypeMetadata", () => {
             });
 
             someClassMetadata.setConfig({name: 'SomeClass', interfaces: [SomeInterface]});
-            expect(someClassMetadata.toGraphQLType().getInterfaces()).to.eql([SomeInterface]);
+            expect(someClassMetadata.toGraphQLObjectType().getInterfaces()).to.eql([SomeInterface]);
         });
 
         it("pass annotated class in interface array ", () => {
@@ -63,8 +63,8 @@ describe("ObjectTypeMetadata", () => {
             }
 
             someClassMetadata.setConfig({name: 'SomeClass', interfaces: [SomeInterface]});
-            expect(someClassMetadata.toGraphQLType().getInterfaces()).to.eql([
-                InterfaceTypeMetadata.getForClass(SomeInterface).toGraphQLType()
+            expect(someClassMetadata.toGraphQLObjectType().getInterfaces()).to.eql([
+                InterfaceTypeMetadata.getForClass(SomeInterface).toGraphQLInterfaceType()
             ]);
         });
     });

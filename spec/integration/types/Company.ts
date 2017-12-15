@@ -1,8 +1,7 @@
-import {type} from "../../../lib/decorators/type";
-import {field, id, listLazy} from "../../../lib/";
+import {nonNull, type} from "../../../lib";
+import {field, id, listThunk} from "../../../lib/";
 import {User} from "./User";
 import {GraphQLString} from "graphql";
-import {nonNull} from "../../../lib/index";
 
 @type()
 export class Company {
@@ -12,6 +11,6 @@ export class Company {
     @field(GraphQLString)
     name:string;
 
-    @listLazy(() => User)
+    @listThunk(() => User)
     employees:User[];
 }

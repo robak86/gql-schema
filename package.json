@@ -1,6 +1,6 @@
 {
   "name": "gql-schema",
-  "version": "0.0.3",
+  "version": "0.4.0",
   "description": "Yet another experimental library for defining graphql schemas using decorators.",
   "repository": "https://github.com/robak86/gql-schema",
   "main": "lib/index.js",
@@ -10,29 +10,36 @@
     "build:copy": "cp package.json ./dist/lib/ && cp README.md ./dist/lib/",
     "build:compile": "tsc",
     "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile",
-    "build:watch": "npm run build:clean && npm run build:copy && tsc --watch --sourceMap",
-    "build:coverage": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js | coveralls"
+    "build:watch": "npm run build:clean && npm run build:copy && tsc --watch --sourceMap --pretty",
+    "build:coverage": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js | coveralls",
+    "build:coverage:local": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js"
   },
   "author": "Tomasz Robaczewski",
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.0.0",
-    "@types/graphql": "^0.11.6",
+    "@types/graphql": "^0.11.7",
     "@types/lodash": "^4.14.65",
     "@types/mocha": "^2.2.41",
+    "@types/sinon": "^4.1.2",
     "chai": "^4.0.2",
     "coveralls": "^2.13.1",
     "mocha": "^3.4.2",
     "nyc": "^11.0.3",
     "reflect-metadata": "^0.1.10",
+    "sinon": "^4.1.3",
     "source-map-support": "^0.4.15",
     "typescript": "^2.6.1"
   },
   "dependencies": {
-    "graphql": "^0.11.7",
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
-    "graphql": "^0.11.7"
+    "graphql": "0.11.7"
+  },
+  "nyc": {
+    "exclude": [
+      "dist/spec/**/*.js"
+    ]
   }
 }
