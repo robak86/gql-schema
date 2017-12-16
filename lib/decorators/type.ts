@@ -1,10 +1,9 @@
-import {ObjectTypeMetadata, TypeConfig} from "../metadata/ObjectTypeMetadata";
+import {TypeConfigParams, TypeMetadata} from "../types-metadata/TypeMetadata";
 
-export const type = (config:TypeConfig<any, any> = {}):ClassDecorator => {
+export const type = (config:Partial<TypeConfigParams> = {}):ClassDecorator => {
     return <TFunction extends Function>(klass:TFunction):TFunction => {
-        let objectTypeMetadata = ObjectTypeMetadata.getOrCreateForClass(klass);
+        let objectTypeMetadata = TypeMetadata.getOrCreateForClass(klass);
         objectTypeMetadata.setConfig(config);
-
         return klass;
     };
 };

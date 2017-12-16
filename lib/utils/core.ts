@@ -25,4 +25,13 @@ export function invariant(condition:boolean, message:string) {
     }
 }
 
+export function propagateErrorWithContext<T>(ctx:string, fn:() => T):T {
+    try {
+        return fn();
+    } catch (e) {
+        let error = new Error(`[${ctx}] ${e.message}`);
+        throw error
+    }
+}
+
 export function noop() {}

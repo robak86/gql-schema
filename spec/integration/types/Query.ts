@@ -1,6 +1,6 @@
-import {type} from "../../../lib/decorators/type";
+import {type} from "../../../lib";
 import {GraphQLString} from "graphql";
-import {list, field, nonNull, args, resolve, nonNullItems} from "../../../lib/";
+import {field, list, nonNull, nonNullItems, params, resolve} from "../../../lib/";
 import {User} from "./User";
 import {UsersArguments} from "./UserSearch";
 import {resolveFakeSearch, resolveUsers} from "../resolvers/queries";
@@ -17,7 +17,7 @@ export class Query {
     someQuery:string;
 
     @list(User) @nonNull() @nonNullItems()
-    @args(UsersArguments) @resolve(resolveUsers)
+    @params(UsersArguments) @resolve(resolveUsers)
     users:User[];
 
     @list(SearchResultType) @nonNull() @nonNullItems()

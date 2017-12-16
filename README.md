@@ -3,7 +3,10 @@
 [![Build Status](https://travis-ci.org/robak86/gql-schema.svg?branch=master)](https://travis-ci.org/robak86/gql-schema)
 [![Coverage Status](https://coveralls.io/repos/github/robak86/gql-schema/badge.svg?branch=master)](https://coveralls.io/github/robak86/gql-schema?branch=master)
 
-Yet another experimental library for defining graphql schemas using decorators. Alpha version - use at your own risk.
+Yet another library for defining graphql schemas using decorators.
+
+**Warning**: This software is still at an early stage of development. Use at your own risk! 
+
 
 ## Getting started
 
@@ -58,7 +61,7 @@ main();
 ## ```@type``` decorator
  
 ```typescript
-import {type, field, list, nonNull, nonNullItems, resolve, description, id, argsType, args} from 'gql-schema';
+import {type, field, list, nonNull, nonNullItems, resolve, description, id, input, params} from 'gql-schema';
 import {GraphQLString, GraphQLInt} from "graphql";
 
 const resolveFunction = (_, args:SomeParams, ctx):Partial<SomeType> => {
@@ -87,7 +90,7 @@ class SomeType {
     nonNullableListWithNullItemsForbidden: string[]
 }
 
-@argsType()
+@input()
 class SomeParams {
     @field(GraphQLString) @nonNull()
     someParam:string
@@ -96,7 +99,7 @@ class SomeParams {
 @type()
 class Query {
     @field(SomeType) @nonNull()
-    @args(SomeParams) @resolve(resolveFunction)
+    @params(SomeParams) @resolve(resolveFunction)
     someData:SomeType
 }
 ```
@@ -124,7 +127,7 @@ type Query {
 ## ```@input``` decorator
 
 ```typescript
-import {field, input, nonNull, args, argsType, resolve, type} from 'gql-schema';
+import {field, input, nonNull, params, input, resolve, type} from 'gql-schema';
 import {GraphQLString} from "graphql";
 
 const createUser = (_, args:CreateUserParams, ctx):Partial<User> => {
@@ -152,7 +155,7 @@ class NewUserAddressParams {
     city:string;
 }
 
-@argsType()
+@input()
 class CreateUserParams {
     @field(NewUserParams) @nonNull()
     userParams:NewUserParams;
@@ -187,7 +190,7 @@ class User {
 @type()
 class Mutation {
     @field(User) @nonNull()
-    @args(CreateUserParams) @resolve(createUser)
+    @params(CreateUserParams) @resolve(createUser)
     createUser:User
 }
 ```
@@ -244,7 +247,7 @@ class BackgroundJob {
 Given annotated classes will produce following schema definition. 
 
 ```graphql schema
-type BackgroundJob{
+type BackgroundJob {
     status: Status!
 }
 

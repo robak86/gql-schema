@@ -1,4 +1,4 @@
-import {createEnum} from "../../lib/factories/createEnum";
+import {createEnum} from "../../lib";
 import {expect} from 'chai';
 import {GraphQLEnumType} from "graphql";
 

@@ -1,7 +1,7 @@
 import {buildASTSchema, parse, printType} from "graphql";
 import {expect} from 'chai';
 import {GraphQLSchema} from "graphql/type/schema";
-import {createSchema} from "../../lib/factories/createSchema";
+import {createSchema} from "../../lib";
 import {Mutation} from "./types/Mutation";
 import {Query} from "./types/Query";
 
@@ -12,7 +12,7 @@ function createdSchemaFromDecoratedClasses():GraphQLSchema {
 
 function createSchemaFromDefinition():GraphQLSchema {
     const definition = `
-            # User search address params
+            """User search address params"""
             input UserSearchAddressParams {
                 street: String
             }
@@ -24,10 +24,17 @@ function createSchemaFromDefinition():GraphQLSchema {
 
             type User {
                 id: ID!
-                firstName:String 
+                firstName: String
                 firstNameUpperCase: String
+                address: Address
                 employers: [Company!]!
                 role: UserRole!
+            }
+            
+            type Address {
+                id: ID
+                streetName: String
+                city: String
             }
 
             type Query {
@@ -38,27 +45,39 @@ function createSchemaFromDefinition():GraphQLSchema {
                 images: [Image!]!
                 audioAssets: [AudioAsset!]!
             }
-            
+
             type Mutation {
-                someMutation: String
+                createUser(firstName: String!, lastName: String!, address: CreateAddressParams): User
+                createAddress(streetName: String, city: String): Address
+                createCompany(companyName: String): Company
+                createCompanyWrapped(input: CreateCompanyParams!): Company
             }
             
+            input CreateCompanyParams {
+                companyName: String
+            }
+            
+            input CreateAddressParams {
+                streetName: String
+                city: String
+            }
+
             type Company {
                 employees:[User!]!
             }
-            
+
             enum UserRole {
                 admin 
                 stuff 
                 guest
             }
-            
+
             interface Asset {
                  id: ID!
                  size: Int!
                  mimeType: String!
             }
-            
+
             type Image implements Asset {
                  id: ID!
                  size: Int!
@@ -66,14 +85,14 @@ function createSchemaFromDefinition():GraphQLSchema {
                  width: Int
                  height: Int
             }
-            
+
             type AudioAsset implements Asset {
                 id: ID!
                 size: Int!
                 mimeType: String!
                 length: Int
             }
-            
+
             union SearchResult = User | Company
     `;
     return buildASTSchema(parse(definition));
@@ -99,6 +118,12 @@ describe("building schema", () => {
         });
     });
 
+    describe("type Address", () => {
+        it("generates proper type", () => {
+            expectTypesEqual('Address');
+        });
+    });
+
     describe("type Mutation", () => {
         it("generates proper type", () => {
             expectTypesEqual('Mutation');
@@ -111,13 +136,13 @@ describe("building schema", () => {
         });
     });
 
-    describe("input UserSearchAddressParams", () => {
+    describe("input CreateAddressParams", () => {
         it("generates proper type", () => {
-            expectTypesEqual('UserSearchAddressParams');
+            expectTypesEqual('CreateAddressParams');
         });
     });
 
-    describe("enum UserSearchAddressParams", () => {
+    describe("input UserSearchAddressParams", () => {
         it("generates proper type", () => {
             expectTypesEqual('UserSearchAddressParams');
         });

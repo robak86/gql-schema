@@ -1,9 +1,10 @@
 import {Company} from "./Company";
-import {listLazy, field, id, nonNull, resolve, nonNullItems} from "../../../lib/";
+import {field, id, listThunk, nonNull, nonNullItems, resolve} from "../../../lib/";
 import {GraphQLString} from "graphql";
-import {type} from "../../../lib/decorators/type";
+import {type} from "../../../lib";
 import {resolveEmployersForUser} from "../resolvers/queries";
 import {UserRole} from "./UserRole";
+import {Address} from "./Address";
 
 
 @type()
@@ -17,7 +18,10 @@ export class User {
     @field(GraphQLString) @resolve((user:User) => user.firstName.toUpperCase())
     firstNameUpperCase:string;
 
-    @listLazy(() => Company) @nonNull() @nonNullItems()
+    @field(Address)
+    address:Address;
+
+    @listThunk(() => Company) @nonNull() @nonNullItems()
     @resolve(resolveEmployersForUser)
     employers:Company[];
 

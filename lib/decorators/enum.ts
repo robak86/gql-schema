@@ -1,7 +1,7 @@
 import {enumsRegistry} from "../registry/typesRegistry";
 
 /***
- * It makes enum being acceptable as type for @field decorator
+ * It makes native typescript enum being acceptable as type for @field decorator
  * @param {string} name
  * @param {Object} enumType
  * @param props

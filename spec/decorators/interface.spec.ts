@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {GraphQLString} from "graphql";
 import {field} from "../../lib";
 import {interfaceType} from "../../lib/decorators/interface";
-import {InterfaceTypeMetadata} from "../../lib/metadata/InterfaceTypeMetadata";
+import {InterfaceTypeMetadata} from "../../lib/types-metadata/InterfaceTypeMetadata";
 
 describe("@interfaceType", () => {
     describe("@interfaceType()", () => {
@@ -17,7 +17,7 @@ describe("@interfaceType", () => {
         });
 
         it("sets default name using class name", () => {
-            expect(InterfaceTypeMetadata.getForClass(SomeType).toGraphQLType().name).to.eq('SomeType');
+            expect(InterfaceTypeMetadata.getForClass(SomeType).toGraphQLInterfaceType().name).to.eq('SomeType');
         });
     });
 });

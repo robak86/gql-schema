@@ -1,5 +1,5 @@
 import {graphql, GraphQLSchema} from "graphql";
-import {createSchema} from "../../lib/factories/createSchema";
+import {createSchema} from "../../lib";
 import {Query} from "./types/Query";
 import {Mutation} from "./types/Mutation";
 import {expect} from 'chai';
@@ -70,7 +70,7 @@ describe("root query", () => {
         });
     });
 
-    describe("query with args", () => {
+    describe("query with params", () => {
         it("returns correct data", async () => {
             let query = `
                 query Users($firstName: String){

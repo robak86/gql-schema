@@ -1,27 +1,26 @@
-import {GraphQLID, GraphQLString} from "graphql";
-import {FieldsMetadata} from "../../lib/metadata/FieldsMetadata";
+import {GraphQLFieldConfig, GraphQLID, GraphQLList, GraphQLNonNull, GraphQLString} from "graphql";
+import {FieldsMetadata} from "../../lib/fields-metadata/FieldsMetadata";
 import {expect} from 'chai';
-import {id, field, fieldLazy, list, listLazy, description, nonNull, nonNullItems} from '../../lib/';
-import {decorateEnum} from "../../lib/decorators/enum";
+import {description, field, fieldThunk, id, list, listThunk, nonNull, nonNullItems} from '../../lib/';
+
+function getSpecField(klass, propertyKey:string = 'someField'):GraphQLFieldConfig<any, any> {
+    return FieldsMetadata.getForClass(klass).getField(propertyKey).toGraphQLFieldConfig();
+}
 
 describe("fields decorators", () => {
+    let fieldConfig:GraphQLFieldConfig<any, any>;
+
     describe("@id()", () => {
         class SomeClass {
-            @id()
-            someField:string
+            @id() someField:string;
         }
 
-        let fieldConfig;
         beforeEach(() => {
-            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            fieldConfig = getSpecField(SomeClass)
         });
 
-        it("adds type to property config", () => {
+        it("sets correct type on GraphQLFieldConfig", () => {
             expect(fieldConfig.type).to.eq(GraphQLID);
-        });
-
-        it("uses defaults values", () => {
-            expect(fieldConfig.nonNull).to.eq(false);
         });
     });
 
@@ -31,41 +30,27 @@ describe("fields decorators", () => {
             someField:string
         }
 
-        let fieldConfig;
         beforeEach(() => {
-            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            fieldConfig = getSpecField(SomeClass)
         });
 
-        it("sets type for field config", () => {
+        it("sets correct type on GraphQLFieldConfig", () => {
             expect(fieldConfig.type).to.eq(GraphQLString);
-        });
-
-        it("uses defaults values", () => {
-            expect(fieldConfig.nonNull).to.eq(false);
-            expect(fieldConfig.array).to.eq(false);
-            expect(fieldConfig.nonNullItem).to.eq(false);
         });
     });
 
-    describe("@fieldLazy()", () => {
+    describe("@fieldThunk()", () => {
         class SomeClass {
-            @fieldLazy(() => GraphQLString)
+            @fieldThunk(() => GraphQLString)
             someField:string
         }
 
-        let fieldConfig;
         beforeEach(() => {
-            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            fieldConfig = getSpecField(SomeClass)
         });
 
-        it("adds thunkType to property config", () => {
-            expect(fieldConfig.thunkType()).to.eq(GraphQLString);
-        });
-
-        it("uses defaults values", () => {
-            expect(fieldConfig.nonNull).to.eq(false);
-            expect(fieldConfig.array).to.eq(false);
-            expect(fieldConfig.nonNullItem).to.eq(false);
+        it("sets correct type on GraphQLFieldConfig", () => {
+            expect(fieldConfig.type).to.eq(GraphQLString);
         });
     });
 
@@ -75,71 +60,76 @@ describe("fields decorators", () => {
             someField:string
         }
 
-        let fieldConfig;
         beforeEach(() => {
-            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            fieldConfig = getSpecField(SomeClass)
         });
 
-        it("adds type to property config", () => {
-            expect(fieldConfig.type).to.eq(GraphQLString);
-        });
-
-        it("sets list config property to true", () => {
-            expect(fieldConfig.array).to.eq(true);
+        it("sets correct type on GraphQLFieldConfig", () => {
+            expect(fieldConfig.type).to.eql(new GraphQLList(GraphQLString));
         });
     });
 
-    describe("@listLazy()", () => {
+    describe("@listThunk()", () => {
         class SomeClass {
-            @listLazy(() => GraphQLString)
+            @listThunk(() => GraphQLString)
             someField:string
         }
 
-        let fieldConfig;
         beforeEach(() => {
-            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            fieldConfig = getSpecField(SomeClass)
         });
 
-        it("adds type to property config", () => {
-            expect(fieldConfig.thunkType()).to.eq(GraphQLString);
-        });
-
-        it("sets list config property to true", () => {
-            expect(fieldConfig.array).to.eq(true);
+        it("sets correct type on GraphQLFieldConfig", () => {
+            expect(fieldConfig.type).to.eql(new GraphQLList(GraphQLString));
         });
     });
 
     describe("decorators chaining", () => {
-        class SomeClass {
-            @description('Some Field description')
-            @list(GraphQLString) @nonNull() @nonNullItems()
-            someField:string
-        }
+        describe("chaining decorators for non list type", () => {
+            class SomeClass {
+                @description('Some Field description')
+                @field(GraphQLString) @nonNull()
+                someField:string
+            }
 
-        let fieldConfig;
-        beforeEach(() => {
-            fieldConfig = FieldsMetadata.getForClass(SomeClass).getField('someField');
+            beforeEach(() => {
+                fieldConfig = getSpecField(SomeClass)
+            });
+
+            it("adds type to property config", () => {
+                expect(fieldConfig.type).to.eql(new GraphQLNonNull(GraphQLString));
+            });
+
+            it("sets description", () => {
+                expect(fieldConfig.description).to.eq('Some Field description');
+            });
         });
 
-        it("adds type to property config", () => {
-            expect(fieldConfig.type).to.eq(GraphQLString);
-        });
+        describe("chaining decorators for list type", () => {
+            class SomeClass {
+                @description('Some Field description')
+                @list(GraphQLString) @nonNull() @nonNullItems()
+                someField:string
+            }
 
-        it("sets list config property to true", () => {
-            expect(fieldConfig.array).to.eq(true);
-        });
+            beforeEach(() => {
+                fieldConfig = getSpecField(SomeClass)
+            });
 
-        it("sets nonNullItem", () => {
-            expect(fieldConfig.nonNullItem).to.eq(true);
-        });
+            it("adds type to property config", () => {
+                expect(fieldConfig.type).to.eql(new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString))));
+            });
 
-        it("sets nonNull", () => {
-            expect(fieldConfig.nonNull).to.eq(true);
-        });
-
-        it("sets description", () => {
-            expect(fieldConfig.description).to.eq('Some Field description');
+            it("sets description", () => {
+                expect(fieldConfig.description).to.eq('Some Field description');
+            });
         });
     });
 
+    describe("throwing errors on forbidden decorators combination", () => {
+        it('throws error for @field() and @nonNullItems() combination');
+        it('throws error for @field() and @list() used at the same time');
+        it('throws error for @field() and @listThunk() used at the same time');
+        it('throws error for @fieldThunk() and @list() used at the same time');
+    });
 });

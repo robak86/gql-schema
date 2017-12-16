@@ -1,67 +1,47 @@
-import {FieldConfig, FieldsMetadata} from "../metadata/FieldsMetadata";
-import {invariant} from "../utils/core";
-import * as _ from 'lodash';
-import {GraphQLID} from "graphql";
-import {ArgsType, FieldType} from "./typesInferention";
+import {GraphQLFieldResolver, GraphQLID} from "graphql";
+import {FieldType} from "../types-conversion/TypeProxy";
+import {ArgsType} from "../types-conversion/ArgumentsTypeProxy";
+import {createFieldDecorator} from "./helpers";
 
+export const id = ():PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setType(GraphQLID)
+});
 
-function patchField(target, propertyKey, partialConfig:Partial<FieldConfig>) {
-    let fieldsMetadata:FieldsMetadata = FieldsMetadata.getOrCreateForClass(target.constructor);
-    fieldsMetadata.patchConfig(propertyKey, partialConfig);
-}
+export const field = (type:FieldType):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setType(type);
+});
 
-export const id = ():PropertyDecorator => {
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {
-        type: GraphQLID
-    })
-};
+export const fieldThunk = (thunkType:() => (FieldType)):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setTypeThunk(thunkType);
+});
 
-export const field = (type:FieldType):PropertyDecorator => {
-    invariant(!!type, `@field decorator called with undefined or null value`);
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {type})
-};
+export const nonNull = ():PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setNonNullConstraint()
+});
 
-export const fieldLazy = (thunkType:() => (FieldType)):PropertyDecorator => {
-    invariant(_.isFunction(thunkType), `@fieldThunk decorator called with non function param`);
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {thunkType})
-};
+export const nonNullItems = ():PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setNonNullItemsConstraint()
+});
+export const description = (description:string):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setDescription(description)
+});
 
-export const nonNull = ():PropertyDecorator => {
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {nonNull: true})
-};
+export const params = (argsType:ArgsType):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setParamsType(argsType)
+});
 
-export const nonNullItems = ():PropertyDecorator => {
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {nonNullItem: true})
-};
+export const paramsThunk = (argsType:() => ArgsType):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setParamsThunk(argsType)
+});
 
-export const description = (description:string):PropertyDecorator => {
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {description})
-};
+export const resolve = <T>(resolve:GraphQLFieldResolver<any, any>):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setResolver(resolve);
+});
 
-export const args = (argsType:ArgsType):PropertyDecorator => {
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {args: argsType})
-};
+export const list = (type:FieldType):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setListType(type)
+});
 
-export const resolve = (resolve:Function):PropertyDecorator => {
-    return (target:Object, propertyKey:string) => patchField(target, propertyKey, {resolve})
-};
-
-export const list = (type:FieldType):PropertyDecorator => {
-    invariant(!!type, `@array decorator called with undefined or null value`);
-    return (target:Object, propertyKey:string) => {
-        patchField(target, propertyKey, {
-            array: true,
-            type
-        })
-    }
-};
-
-export const listLazy = (thunkType:() => FieldType):PropertyDecorator => {
-    invariant(!!thunkType, `@arrayThunk decorator called with undefined or null value`);
-    return (target:Object, propertyKey:string) => {
-        patchField(target, propertyKey, {
-            array: true,
-            thunkType
-        })
-    }
-};
+export const listThunk = (thunkType:() => FieldType):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setListTypeThunk(thunkType)
+});
