@@ -1,7 +1,7 @@
 # GraphQL Schema Decorators
 
 [![Build Status](https://travis-ci.org/robak86/gql-schema.svg?branch=master)](https://travis-ci.org/robak86/gql-schema)
-[![Coverage Status](https://coveralls.io/repos/github/robak86/gql-schema/badge.svg?branch=master)](https://coveralls.io/github/robak86/gql-schema?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/robak86/gql-schema/badge.svg?branch=master&service=github)](https://coveralls.io/github/robak86/gql-schema?branch=master)
 
 Yet another library for defining graphql schemas using decorators.
 
