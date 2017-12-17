@@ -1,19 +1,11 @@
-import {GraphQLSchema} from "graphql";
-import {someOrThrow} from "../utils/core";
-import {TypeMetadata} from "../types-metadata/TypeMetadata";
+import {GraphQLObjectType, GraphQLSchema} from "graphql";
+import {typesResolver} from "../types-conversion/TypesResolver";
 
 export function createSchema(annotatedRootClass, annotatedMutationClass):GraphQLSchema {
-    let query = someOrThrow(
-        TypeMetadata.getForClass(annotatedRootClass),
-        'Class provided as query root is not decorated with @type');
 
-
-    let mutation = someOrThrow(
-        TypeMetadata.getForClass(annotatedMutationClass),
-        'Class provided as query root is not decorated with @type');
 
     return new GraphQLSchema({
-        query: query.toGraphQLObjectType(),
-        mutation: mutation.toGraphQLObjectType()
+        query: typesResolver.toGraphQLType(annotatedRootClass) as GraphQLObjectType,
+        mutation: typesResolver.toGraphQLType(annotatedMutationClass) as GraphQLObjectType
     })
 }

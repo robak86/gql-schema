@@ -1,18 +1,28 @@
-import {FieldType, TypeProxy} from "../types-conversion/TypeProxy";
-import {TypeWrapper} from "../types-conversion/TypeWrapper";
+import {TypeValue} from "./TypeValue";
+import {TypeWrapper} from "./TypeWrapper";
 import {
-    GraphQLArgumentConfig, GraphQLFieldConfig, GraphQLFieldResolver, GraphQLInputFieldConfig,
-    GraphQLInputType, GraphQLOutputType
+    GraphQLArgumentConfig, GraphQLFieldConfig, GraphQLFieldConfigArgumentMap, GraphQLFieldResolver,
+    GraphQLInputFieldConfig,
+    GraphQLInputType, GraphQLOutputType, GraphQLType
 } from "graphql";
-import {ArgsType, ArgumentsTypeProxy} from "../types-conversion/ArgumentsTypeProxy";
+import {ITypeResolver} from "../types-conversion/abstract/ITypeResolver";
+import {ClassType} from "../utils/types";
 
+export type FieldType =
+    GraphQLType |
+    ClassType<any> |
+    Object;
+
+export type ArgsType =
+    GraphQLFieldConfigArgumentMap |
+    ClassType<any>
 
 //TODO: throw errors from setters for wrong data
 export class FieldConfig {
-    private type = new TypeProxy();
+    private type = new TypeValue<FieldType>();
+    private args:TypeValue<ArgsType>;
     private compositeType:TypeWrapper = new TypeWrapper();
     private description:string;
-    private args:ArgumentsTypeProxy;
     private resolveFn:GraphQLFieldResolver<any, any>;
     private defaultValue;
 
@@ -21,12 +31,12 @@ export class FieldConfig {
     }
 
     setParamsType(paramsFieldType:ArgsType) {
-        this.args = new ArgumentsTypeProxy();
+        this.args = new TypeValue();
         this.args.setType(paramsFieldType);
     }
 
     setParamsThunk(paramsFieldTypeThunk:() => ArgsType) {
-        this.args = new ArgumentsTypeProxy();
+        this.args = new TypeValue();
         this.args.setTypeThunk(paramsFieldTypeThunk);
     }
 
@@ -64,8 +74,9 @@ export class FieldConfig {
         this.description = name;
     }
 
-    toGraphQLInputFieldConfig():GraphQLArgumentConfig | GraphQLInputFieldConfig {
-        let type = this.type.toGraphQLType() as GraphQLInputType;
+    //TODO: extract this to type resolver
+    toGraphQLInputFieldConfig(typeResolver:ITypeResolver):GraphQLArgumentConfig | GraphQLInputFieldConfig {
+        let type = typeResolver.toGraphQLType(this.type.inferType()) as GraphQLInputType;
         type = this.compositeType.wrap(type) as GraphQLInputType;
 
         return {
@@ -75,13 +86,14 @@ export class FieldConfig {
         }
     }
 
-    toGraphQLFieldConfig():GraphQLFieldConfig<any, any> {
-        let type = this.type.toGraphQLType();
+    //TODO: extract this to type resolver
+    toGraphQLFieldConfig(typeResolver:ITypeResolver, argsResolver:ITypeResolver):GraphQLFieldConfig<any, any> {
+        let type = typeResolver.toGraphQLType(this.type.inferType());
         type = this.compositeType.wrap(type) as GraphQLOutputType;
 
         return {
             type,
-            args: this.args && this.args.toGraphQLType() as any,
+            args: this.args && argsResolver.toGraphQLType(this.args.inferType()) as any,
             resolve: this.resolveFn,
             description: this.description
         }

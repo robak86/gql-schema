@@ -12,7 +12,7 @@
     "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile",
     "build:watch": "npm run build:clean && npm run build:copy && tsc --watch --sourceMap --pretty",
     "build:coverage": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js | coveralls",
-    "build:coverage:local": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js"
+    "build:coverage:local": "nyc mocha -- -- spec dist/spec/**/*.spec.js"
   },
   "author": "Tomasz Robaczewski",
   "license": "MIT",
@@ -35,7 +35,7 @@
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
-    "graphql": "0.11.7"
+    "graphql": "^0.11.7"
   },
   "nyc": {
     "exclude": [

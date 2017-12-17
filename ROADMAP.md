@@ -29,6 +29,8 @@ type User {
 }
 ```
 
+### Reorganize, rewrite specs
+
 ### Infer basic types from ts metadata
 - investigate if it makes sense, because this feature would be very limited - only for couple of types.
 

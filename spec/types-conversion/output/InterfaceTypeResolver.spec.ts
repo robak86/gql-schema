@@ -1,10 +1,10 @@
-import {noop} from "../../lib/utils/core";
+import {noop} from "../../../lib/utils/core";
 import {expect} from 'chai';
-import {GraphQLInterfaceType, GraphQLString} from "graphql";
-import {field, type} from "../../lib";
-import {InterfaceTypeMetadata} from "../../lib/types-metadata/InterfaceTypeMetadata";
-import {FieldsMetadata} from "../../lib/fields-metadata/FieldsMetadata";
-import {TypeMetadata} from "../../lib/types-metadata/TypeMetadata";
+import {GraphQLInterfaceType, GraphQLObjectType, GraphQLString} from "graphql";
+import {field, type} from "../../../lib";
+import {InterfaceTypeMetadata} from "../../../lib/types-metadata/InterfaceTypeMetadata";
+import {FieldsMetadata} from "../../../lib/fields-metadata/FieldsMetadata";
+import {typesResolver} from "../../../lib/types-conversion/TypesResolver";
 
 
 describe("InterfaceTypeMetadata", () => {
@@ -12,7 +12,7 @@ describe("InterfaceTypeMetadata", () => {
     describe("static getOrCreateForClass", noop);
 
     describe(".toGraphQLType", () => {
-        let SomeInterface,
+        let SomeInterface:Object,
             someInterfaceMetadata:InterfaceTypeMetadata,
             someInterfaceFieldsMetadata:FieldsMetadata;
 
@@ -24,18 +24,21 @@ describe("InterfaceTypeMetadata", () => {
         });
 
         it("returns GraphQLInterfaceType", () => {
-            expect(someInterfaceMetadata.toGraphQLInterfaceType()).to.be.instanceOf(GraphQLInterfaceType);
+            expect(typesResolver.toGraphQLType(SomeInterface)).to.be.instanceOf(GraphQLInterfaceType);
         });
 
         it("it pass name property to GraphQLInterfaceType instance", () => {
             someInterfaceMetadata.setConfig({name: 'SomeName'});
-            expect(someInterfaceMetadata.toGraphQLInterfaceType().name).to.eq('SomeName');
+            let graphQLInterfaceType = typesResolver.toGraphQLType(SomeInterface) as GraphQLInterfaceType;
+            expect(graphQLInterfaceType.name).to.eq('SomeName');
         });
 
         it("it pass description property to GraphQLInterfaceType instance", () => {
             someInterfaceMetadata.setConfig({description: 'Some description'});
-            expect(someInterfaceMetadata.toGraphQLInterfaceType().description).to.eq('Some description');
+            let graphQLInterfaceType = typesResolver.toGraphQLType(SomeInterface) as GraphQLInterfaceType;
+            expect(graphQLInterfaceType.description).to.eq('Some description');
         });
+
 
         it("infers annotated types from resolveType function", () => {
             @type()
@@ -44,8 +47,9 @@ describe("InterfaceTypeMetadata", () => {
             }
 
             someInterfaceMetadata.setConfig({name: 'SomeName', resolveType: () => SomeClass});
-            expect(someInterfaceMetadata.toGraphQLInterfaceType().resolveType(null, null, null)).to
-                .eql(TypeMetadata.getForClass(SomeClass).toGraphQLObjectType())
+            let graphQLType = typesResolver.toGraphQLType(SomeInterface) as GraphQLInterfaceType;
+            expect(graphQLType.resolveType(null, null, null)).to
+                .eql(typesResolver.toGraphQLType(SomeClass) as GraphQLObjectType)
         });
     });
 });

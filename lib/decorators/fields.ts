@@ -1,7 +1,6 @@
 import {GraphQLFieldResolver, GraphQLID} from "graphql";
-import {FieldType} from "../types-conversion/TypeProxy";
-import {ArgsType} from "../types-conversion/ArgumentsTypeProxy";
 import {createFieldDecorator} from "./helpers";
+import {ArgsType, FieldType} from "../fields-metadata/FieldConfig";
 
 export const id = ():PropertyDecorator => createFieldDecorator(fieldConfig => {
     fieldConfig.setType(GraphQLID)

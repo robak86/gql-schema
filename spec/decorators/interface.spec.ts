@@ -1,8 +1,8 @@
 import {expect} from 'chai';
 import {GraphQLString} from "graphql";
-import {field} from "../../lib";
-import {interfaceType} from "../../lib/decorators/interface";
+import {field, interfaceType} from "../../lib";
 import {InterfaceTypeMetadata} from "../../lib/types-metadata/InterfaceTypeMetadata";
+import {getMetadata} from "../../lib/utils/metadata";
 
 describe("@interfaceType", () => {
     describe("@interfaceType()", () => {
@@ -13,11 +13,11 @@ describe("@interfaceType", () => {
         }
 
         it("attaches metadata object", () => {
-            expect(InterfaceTypeMetadata.getForClass(SomeType)).to.be.instanceof(InterfaceTypeMetadata)
+            expect(getMetadata(SomeType)).to.be.instanceof(InterfaceTypeMetadata)
         });
 
         it("sets default name using class name", () => {
-            expect(InterfaceTypeMetadata.getForClass(SomeType).toGraphQLInterfaceType().name).to.eq('SomeType');
+            expect(InterfaceTypeMetadata.getForClass(SomeType).config.get('name')).to.eq('SomeType');
         });
     });
 });
