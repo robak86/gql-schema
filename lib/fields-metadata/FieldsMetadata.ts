@@ -1,9 +1,6 @@
 import 'reflect-metadata';
 import {metadataGet, metadataGetOrSet} from "../utils/metadataFactories";
 import {FieldConfig} from "./FieldConfig";
-import {GraphQLFieldConfigMap, GraphQLInputFieldConfigMap} from "graphql";
-import {propagateErrorWithContext} from "../utils/core";
-import * as _ from "lodash";
 
 const FIELDS_METADATA_KEY = '__FIELDS_METADATA_KEY';
 
@@ -20,17 +17,5 @@ export class FieldsMetadata {
 
     getFields():{ [fieldName:string]:FieldConfig } {
         return this._fields;
-    }
-
-    toGraphQLFieldConfigMap():GraphQLFieldConfigMap<any, any> {
-        return _.mapValues(this.getFields(), (fieldConfig, fieldName) => {
-            return propagateErrorWithContext(fieldName, () => fieldConfig.toGraphQLFieldConfig())
-        });
-    }
-
-    toGraphQLInputFieldConfigMap():GraphQLInputFieldConfigMap{
-        return _.mapValues(this.getFields(), (fieldConfig, fieldName) => {
-            return propagateErrorWithContext(`fieldName: ${fieldName}`, () => fieldConfig.toGraphQLInputFieldConfig())
-        });
     }
 }

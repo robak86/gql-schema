@@ -1,4 +1,4 @@
-import {TypeWrapper} from "../../lib/types-conversion/TypeWrapper";
+import {TypeWrapper} from "../../lib/fields-metadata/TypeWrapper";
 import {GraphQLList, GraphQLNonNull, GraphQLString} from "graphql";
 import {expect} from 'chai';
 

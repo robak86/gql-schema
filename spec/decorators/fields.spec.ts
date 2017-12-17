@@ -1,14 +1,17 @@
-import {GraphQLFieldConfig, GraphQLID, GraphQLList, GraphQLNonNull, GraphQLString} from "graphql";
-import {FieldsMetadata} from "../../lib/fields-metadata/FieldsMetadata";
+import {GraphQLField, GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from "graphql";
 import {expect} from 'chai';
 import {description, field, fieldThunk, id, list, listThunk, nonNull, nonNullItems} from '../../lib/';
+import {typesResolver} from "../../lib/types-conversion/TypesResolver";
+import {TypeMetadata} from "../../lib/types-metadata/TypeMetadata";
 
-function getSpecField(klass, propertyKey:string = 'someField'):GraphQLFieldConfig<any, any> {
-    return FieldsMetadata.getForClass(klass).getField(propertyKey).toGraphQLFieldConfig();
+function getSpecField(klass, propertyKey:string = 'someField'):GraphQLField<any, any> {
+    TypeMetadata.getOrCreateForClass(klass);
+    let objectType = typesResolver.toGraphQLType(klass) as GraphQLObjectType;
+    return objectType.getFields()[propertyKey];
 }
 
 describe("fields decorators", () => {
-    let fieldConfig:GraphQLFieldConfig<any, any>;
+    let fieldConfig:GraphQLField<any, any>;
 
     describe("@id()", () => {
         class SomeClass {
