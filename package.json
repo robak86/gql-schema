@@ -3,7 +3,12 @@
   "version": "0.5.0",
   "description": "Yet another experimental library for defining graphql schemas using decorators.",
   "repository": "https://github.com/robak86/gql-schema",
-  "main": "lib/index.js",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "node": ">=6.0.0 <9.0.0",
+    "yarn": ">=1.0.2 <2.0.0"
+  },
   "scripts": {
     "test": "mocha --require dist/spec/SpecHelper.js dist/spec/**/*.spec.js",
     "build:clean": "rm -rf ./dist && mkdir -p dist/lib",
@@ -12,7 +17,8 @@
     "build:dist": "npm run build:clean && npm run build:copy && npm run build:compile",
     "build:watch": "npm run build:clean && npm run build:copy && tsc --watch --sourceMap --pretty",
     "build:coverage": "nyc --reporter=text-lcov mocha -- -- spec dist/spec/**/*.spec.js | coveralls",
-    "build:coverage:local": "nyc mocha -- -- spec dist/spec/**/*.spec.js"
+    "build:coverage:local": "nyc mocha -- -- spec dist/spec/**/*.spec.js",
+    "link": "cd dist/lib && yarn install --prod && yarn link"
   },
   "author": "Tomasz Robaczewski",
   "license": "MIT",
@@ -29,13 +35,15 @@
     "reflect-metadata": "^0.1.10",
     "sinon": "^4.1.3",
     "source-map-support": "^0.4.15",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "graphql": "^0.11.7"
   },
   "dependencies": {
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
-    "graphql": "^0.11.7"
+    "graphql": "^0.11.7",
+    "reflect-metadata": "^0.1.10"
   },
   "nyc": {
     "exclude": [
