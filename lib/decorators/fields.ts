@@ -29,6 +29,10 @@ export const params = (argsType:ArgsType):PropertyDecorator => createFieldDecora
     fieldConfig.setParamsType(argsType)
 });
 
+export const defaultValue = (val):PropertyDecorator => createFieldDecorator(fieldConfig => {
+    fieldConfig.setDefaultValue(val)
+});
+
 export const paramsThunk = (argsType:() => ArgsType):PropertyDecorator => createFieldDecorator(fieldConfig => {
     fieldConfig.setParamsThunk(argsType)
 });

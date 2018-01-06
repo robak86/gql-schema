@@ -18,7 +18,7 @@ describe("root query", () => {
                         id
                         firstName
                         firstNameUpperCase
-                        role
+                        roles
                         employers {
                             id
                             name
@@ -33,7 +33,7 @@ describe("root query", () => {
                     id: '1',
                     firstName: 'Jane',
                     firstNameUpperCase: 'JANE',
-                    role: 'admin',
+                    roles: ['admin'],
                     employers: [
                         {
                             id: "1",
@@ -45,7 +45,7 @@ describe("root query", () => {
                     id: '2',
                     firstName: 'John',
                     firstNameUpperCase: 'JOHN',
-                    role: 'stuff',
+                    roles: ['stuff'],
                     employers: [
                         {
                             id: "2",
@@ -57,7 +57,7 @@ describe("root query", () => {
                     id: '3',
                     firstName: 'Adam',
                     firstNameUpperCase: 'ADAM',
-                    role: 'guest',
+                    roles: ['guest'],
                     employers: [
                         {
                             id: "3",

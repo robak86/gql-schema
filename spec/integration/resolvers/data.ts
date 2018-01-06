@@ -2,7 +2,7 @@ import {Company} from "../types/Company";
 import {UserRole} from "../types/UserRole";
 
 export type CompanyEntity = { id:string; name:string; employeesIds:string[], type:'company' };
-export type UserEntity = { id:string; firstName:string; employersIds:string[], role:UserRole, type:'user' };
+export type UserEntity = { id:string; firstName:string; employersIds:string[], roles:UserRole[], type:'user' };
 
 export function getCompanyById(id:string):CompanyEntity {
     return getAllCompanies().filter(company => company.id === id)[0];
@@ -18,9 +18,9 @@ export function getAllCompanies():CompanyEntity[] {
 
 export function getAllUsers():UserEntity[] {
     return [
-        {id: '1', firstName: 'Jane', role: UserRole.admin, employersIds: ['1'], type: 'user'},
-        {id: '2', firstName: 'John', role: UserRole.stuff, employersIds: ['2'], type: 'user'},
-        {id: '3', firstName: 'Adam', role: UserRole.guest, employersIds: ['3'], type: 'user'},
+        {id: '1', firstName: 'Jane', roles: [UserRole.admin], employersIds: ['1'], type: 'user'},
+        {id: '2', firstName: 'John', roles: [UserRole.stuff], employersIds: ['2'], type: 'user'},
+        {id: '3', firstName: 'Adam', roles: [UserRole.guest], employersIds: ['3'], type: 'user'},
     ]
 }
 

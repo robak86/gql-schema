@@ -1,7 +1,7 @@
 import {Company} from "./Company";
 import {field, id, listThunk, nonNull, nonNullItems, resolve} from "../../../lib/";
 import {GraphQLString} from "graphql";
-import {type} from "../../../lib";
+import {list, type} from "../../../lib";
 import {resolveEmployersForUser} from "../resolvers/queries";
 import {UserRole} from "./UserRole";
 import {Address} from "./Address";
@@ -25,6 +25,6 @@ export class User {
     @resolve(resolveEmployersForUser)
     employers:Company[];
 
-    @field(UserRole) @nonNull()
-    role:UserRole
+    @list(UserRole) @nonNull() @nonNullItems()
+    roles:UserRole[]
 }

@@ -2,13 +2,9 @@ sudo: required
 language: node_js
 node_js:
   - "8"
-  - "7"
-#  - "6"
-#  - "5"
-#  - "4"
+  - "9"
 
 before_script:
-  - yarn add graphql --no-save
   - npm run build:dist
 
 after_script:

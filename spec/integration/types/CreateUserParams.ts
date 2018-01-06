@@ -1,6 +1,7 @@
-import {field, input, nonNull} from "../../../lib";
+import {defaultValue, field, input, list, nonNull} from "../../../lib";
 import {GraphQLString} from "graphql";
 import {CreateAddressParams} from "./CreateAddressParams";
+import {UserRole} from "./UserRole";
 
 @input()
 export class CreateUserParams {
@@ -11,5 +12,8 @@ export class CreateUserParams {
     lastName:string;
 
     @field(CreateAddressParams)
-    address:CreateAddressParams
+    address:CreateAddressParams;
+
+    @list(UserRole) @defaultValue([])
+    roles: UserRole[];
 }

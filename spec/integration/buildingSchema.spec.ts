@@ -12,7 +12,7 @@ function createdSchemaFromDecoratedClasses():GraphQLSchema {
 
 function createSchemaFromDefinition():GraphQLSchema {
     const definition = `
-            """User search address params"""
+            # User search address params
             input UserSearchAddressParams {
                 street: String
             }
@@ -28,7 +28,7 @@ function createSchemaFromDefinition():GraphQLSchema {
                 firstNameUpperCase: String
                 address: Address
                 employers: [Company!]!
-                role: UserRole!
+                roles: [UserRole!]!
             }
             
             type Address {
@@ -47,7 +47,7 @@ function createSchemaFromDefinition():GraphQLSchema {
             }
 
             type Mutation {
-                createUser(firstName: String!, lastName: String!, address: CreateAddressParams): User
+                createUser(firstName: String!, lastName: String!, address: CreateAddressParams, roles: [UserRole] = []): User
                 createAddress(streetName: String, city: String): Address
                 createCompany(companyName: String): Company
                 createCompanyWrapped(input: CreateCompanyParams!): Company

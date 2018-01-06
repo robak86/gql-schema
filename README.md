@@ -240,7 +240,7 @@ decorateEnum('Status', JobStatus); // it makes JobStatus acceptable by @field de
 @type()
 class BackgroundJob {
     @field(JobStatus) @nonNull()
-    status:string;
+    status:JobStatus;
 }
 ```
 
