@@ -12,4 +12,7 @@
 ## 0.5.1
 - add @defaultValue decorator
  
+ 
+## 0.5.5
+- add support for inheritance
 

@@ -25,6 +25,11 @@ export function invariant(condition:boolean, message:string) {
     }
 }
 
+export function getSuperClass(klass) {
+    let superClass = Object.getPrototypeOf(klass);
+    return superClass.name ? superClass : null;
+}
+
 export function propagateErrorWithContext<T>(ctx:string, fn:() => T):T {
     try {
         return fn();

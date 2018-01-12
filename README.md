@@ -414,3 +414,52 @@ type AudioAsset implements Asset {
     length: Int
 }
 ```  
+
+### Inheritance
+
+```typescript
+import {field, id, interfaceType, nonNull, type} from "gql-schema";
+import {GraphQLInt, GraphQLString} from "graphql";
+
+@type()
+class PersistedObject {
+    @id() @nonNull()
+    id:string;
+
+    @field(GraphQLInt)
+    createdAt:number; //for simplification store as integer timestamp
+
+    @field(GraphQLInt)
+    updatedAt:number; //for simplification store as integer timestamp
+}
+
+@type()
+class User extends PersistedObject {
+    @field(GraphQLString)
+    email:string
+}
+
+@type()
+class Product extends PersistedObject {
+    @field(GraphQLString)
+    productName:string
+}
+```
+
+Given annotated classes will produce 
+
+```graphql
+type User {
+    id: ID!
+    createdAt: Int
+    updatedAt: Int
+    email: String
+}
+
+type Product {
+    id: ID!
+    createdAt: Int
+    updatedAt: Int
+    productName: String
+}
+```
