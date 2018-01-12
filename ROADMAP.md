@@ -1,34 +1,5 @@
 # ROADMAP
 
-### Add support for inheritance
-- investigate possible pitfalls 
-
-```typescript
-class PersistedObject {    
-    @id()
-    id:string
-    
-    @field(CustomGraphQLDateScalar)
-    createdAt:Date
-    
-    @field(CustomGraphQLDateScalar)
-    updatedAt:Date
-}
-
-@type()
-class User extends PersistedObject {}
-```
-
-should generate:
-
-```graphql
-type User {
-    id: ID
-    createdAt: CustomGraphQLDateScalar
-    updateAt: CustomGraphQLDateScalar
-}
-```
-
 ### Reorganize, rewrite specs
 
 ### Infer basic types from ts metadata
@@ -39,6 +10,7 @@ type User {
 - add validation of field configuration
 - add more descriptive logs for all errors thrown from Metadata classes during native object creation
 - assert one metadata object is attached to class
+- print warnings if some @decarotors are skipped (for example @defaultValue for types other than input)
 
 ### Refactoring
 - use one convention for private fields
