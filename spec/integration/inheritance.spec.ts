@@ -2,7 +2,28 @@ import {buildASTSchema, GraphQLInt, GraphQLString, parse, printType} from "graph
 import {expect} from 'chai';
 import {GraphQLSchema} from "graphql/type/schema";
 import {createSchema, field, id, list, nonNull, nonNullItems, type} from "../../lib";
+import {FieldsMetadata} from "../../lib/fields-metadata/FieldsMetadata";
+import {ClassType} from "../../lib/utils/types";
 
+
+@type()
+class GenericQueryListResult<T> {
+    items:T;
+
+    @field(GraphQLInt) @nonNull()
+    totalCount:number;
+}
+
+//class factory
+function ListQueryResult<T>(itemClass:ClassType<T>) {
+    let listResultsClass = class extends GenericQueryListResult<T> {};
+    let fields = FieldsMetadata.getOrCreateForClass(listResultsClass);
+    let itemsField = fields.getField('items');
+    itemsField.setListType(itemClass);
+    itemsField.setNonNullConstraint();
+    itemsField.setNonNullItemsConstraint();
+    return listResultsClass;
+}
 
 @type()
 class Mutation {
@@ -36,10 +57,7 @@ class User extends PersistedObject {
 }
 
 @type()
-class UsersList extends ListResult {
-    @list(User) @nonNull() @ nonNullItems()
-    users:User[]
-}
+class UsersList extends ListQueryResult(User) {}
 
 @type()
 class Product extends PersistedObject {
@@ -86,7 +104,7 @@ function createSchemaFromDefinition():GraphQLSchema {
             
             type UsersList {
                 totalCount: Int!
-                users: [User!]!
+                items: [User!]!
             }
             
             type ProductsList {
