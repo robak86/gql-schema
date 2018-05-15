@@ -1,6 +1,3 @@
-
-
-
 enum ScalarType {
     Int = 'Int',
     Float = 'Float',
@@ -10,33 +7,36 @@ enum ScalarType {
 }
 
 
-type AttributeType = ScalarType | string;
+type AttributeType = ScalarType | Attributes<any>;
 
+type NarrowAttributeType<T> =
+    T extends ScalarType ? T :
+        T extends Attributes<infer AA> ? AA : never;
 
-type GraphToNativeType<T> =
+type TsType<T> =
     T extends ScalarType.Int ? number :
         T extends ScalarType.Float ? number :
             T extends ScalarType.Boolean ? boolean :
                 T extends ScalarType.ID ? string :
-                    T extends ScalarType.String ? string : never
+                    T extends ScalarType.String ? string :
+                        T extends Attributes<infer A> ? AttributesRegistryTsType<A> : never;
 
-
-type AttributeDefinition<T> = {
+type AttributeDefinition<T extends AttributeType> = {
     type:T
 }
 
-type GetDefinitions<T> = T extends AttributesDefinitions<infer D> ? D :never;
+type ExtractAttributesRegistry<T extends Attributes<any>> = T extends Attributes<infer D> ? D :never;
 
 type GetType<T extends AttributeDefinition<any>> = T extends AttributeDefinition<infer A> ? A :never;
 
 
-type AttributesDefinitionData = {
+type AttributesRegistry = {
     [attrName:string]:AttributeDefinition<any>
 }
 
-class AttributesDefinitions<D extends AttributesDefinitionData> {
-    static define():AttributesDefinitions<{}> {
-        return new AttributesDefinitions<{}>();
+class Attributes<D extends AttributesRegistry> {
+    static define():Attributes<{}> {
+        return new Attributes<{}>();
     }
 
     private constructor() {}
@@ -46,28 +46,28 @@ class AttributesDefinitions<D extends AttributesDefinitionData> {
 
     }
 
-    attribute<K extends string, T extends AttributeType>(key:K, type:T):AttributesDefinitions<D & Record<K, { type:T }>> {
+    attribute<K extends string, T extends AttributeType>(key:K, type:T):Attributes<D & Record<K, { type:T }>> {
         throw new Error("implement me");
     }
 }
 
 
-type NativeAttributes<T> = {
-    [K in keyof GetDefinitions<T>]:GraphToNativeType<GetDefinitions<T>[K]['type']>
+type AttributesTsType<T extends Attributes<AttributesRegistry>> = {
+    [K in keyof ExtractAttributesRegistry<T>]:TsType<ExtractAttributesRegistry<T>[K]['type']>
 }
 
-type NativeAttributesFromAttributesDefinitionData<T extends AttributesDefinitionData> = {
-    [K in keyof T]:GraphToNativeType<T[K]['type']>
+type AttributesRegistryTsType<T extends AttributesRegistry> = {
+    [K in keyof T]:TsType<T[K]['type']>
 }
 
 
-const UserAttrs = AttributesDefinitions.define()
+const UserAttrs = Attributes.define()
     .attribute('firstName', ScalarType.String)
     .attribute('lastName', ScalarType.String)
     .attribute('isAdult', ScalarType.Boolean);
 
 
-type UserAttrs = NativeAttributes<typeof UserAttrs>;
+type UserAttrs = AttributesTsType<typeof UserAttrs>;
 
 
 const user:UserAttrs = {
