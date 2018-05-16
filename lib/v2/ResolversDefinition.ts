@@ -51,9 +51,17 @@ const user:UserAttrs = {
 
 
 const UserResolvers = ResolversDefinition.define(UserAttrs)
-    .attribute('firstName', () => 123)
+    .attribute('firstName', () => 'asd')
     .attribute('lastName', () => 'aaa')
-    .attribute('address', () => 'aaa')
+    .attribute('address', (p, parent) => {
+
+
+
+        return {
+            street: "asd",
+            postalCode: 123
+        }
+    });
 // ;
 //
 //

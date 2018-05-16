@@ -1,3 +1,4 @@
+//TODO: it won't work with custom scalar types :/
 enum ScalarType {
     Int = 'Int',
     Float = 'Float',
